@@ -182,8 +182,8 @@ export default function UserDashboard() {
                       {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'April 2026'}
                     </p>
                   </div>
-                  <Button variant="outline" className="w-full mt-4 rounded-2xl h-14 font-black text-sm uppercase tracking-widest border-border hover:bg-accent hover:text-accent-foreground hover:shadow-xl hover:shadow-accent/20 transition-all active:scale-95">
-                    Account Portal
+                  <Button variant="outline" asChild className="w-full mt-4 rounded-2xl h-14 font-black text-sm uppercase tracking-widest border-border hover:bg-accent hover:text-accent-foreground hover:shadow-xl hover:shadow-accent/20 transition-all active:scale-95">
+                    <Link href="/dashboard/settings">Account Portal</Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -197,7 +197,9 @@ export default function UserDashboard() {
                   <h3 className="text-3xl font-black mb-3">Questions?</h3>
                   <p className="text-background/60 text-lg leading-relaxed font-medium">Our curators are standing by to assist with your creative workflow.</p>
                 </div>
-                <Button className="w-full bg-white text-black hover:bg-accent hover:text-white rounded-2xl h-14 font-black transition-all active:scale-95 shadow-lg">Support Center</Button>
+                <Button asChild className="w-full bg-white text-black hover:bg-accent hover:text-white rounded-2xl h-14 font-black transition-all active:scale-95 shadow-lg">
+                  <Link href="/about">Support Center</Link>
+                </Button>
               </Card>
             </div>
 
