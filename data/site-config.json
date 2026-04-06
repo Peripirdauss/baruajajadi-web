@@ -1,0 +1,116 @@
+{
+  "hero": {
+    "title": "Ultimate Hub for Developers & Creators",
+    "subtitle": "Discover premium tools, curated assets, insightful content, and personal projects all in one place. Designed for creators, developers, and innovators.",
+    "cta_primary": "Explore Tools",
+    "cta_secondary": "Learn More",
+    "stats": [
+      {
+        "label": "Premium Tools",
+        "value": "50+"
+      },
+      {
+        "label": "Design Assets",
+        "value": "200+"
+      },
+      {
+        "label": "Blog Articles",
+        "value": "100+"
+      }
+    ]
+  },
+  "tools": [
+    {
+      "id": 1,
+      "slug": "json-tools-suite",
+      "name": "JSON Tools Suite",
+      "description": "Powerful utilities for parsing, validating, and formatting JSON data with real-time preview.",
+      "category": "Developer Tools",
+      "icon": "Code2"
+    },
+    {
+      "id": 2,
+      "slug": "design-system-generator",
+      "name": "Design System Generator",
+      "description": "Create consistent design systems with automatic color palettes, typography scales, and components.",
+      "category": "Design Tools",
+      "icon": "Palette"
+    },
+    {
+      "id": 3,
+      "slug": "database-schema-builder",
+      "name": "Database Schema Builder",
+      "description": "Visualize and generate database schemas with SQL export support for all major databases.",
+      "category": "Developer Tools",
+      "icon": "Database"
+    },
+    {
+      "id": 4,
+      "slug": "performance-analyzer",
+      "name": "Performance Analyzer",
+      "description": "Analyze and optimize web performance with detailed metrics and actionable recommendations.",
+      "category": "Development",
+      "icon": "Zap"
+    },
+    {
+      "id": 5,
+      "slug": "ai-content-assistant",
+      "name": "AI Content Assistant",
+      "description": "Leverage AI to generate, edit, and enhance content with customizable prompts and templates.",
+      "category": "AI Tools",
+      "icon": "Brain"
+    },
+    {
+      "id": 6,
+      "slug": "component-library",
+      "name": "Component Library",
+      "description": "Browse, customize, and export pre-built UI components for your design system.",
+      "category": "Design Tools",
+      "icon": "LayoutGrid"
+    }
+  ],
+  "blog": [
+    {
+      "slug": "getting-started-with-design-systems",
+      "title": "Getting Started with Design Systems",
+      "excerpt": "Learn the fundamentals of building scalable design systems that improve consistency and efficiency across your projects.",
+      "content": "Design systems have become essential tools for modern product teams. They provide a comprehensive library of components, guidelines, and principles that ensure consistency across digital products. In this comprehensive guide, we'll explore everything you need to know to build an effective design system.\n\n## Why Design Systems Matter\n\nA design system is more than just a collection of components. It's a living document that evolves with your product. It ensures that every team member, from designers to developers, speaks the same language.\n\nBenefits include:\n- Consistency across products and platforms\n- Faster design and development processes\n- Improved collaboration between teams\n- Easier onboarding for new team members\n- Reduced design debt",
+      "author": "Sarah Johnson",
+      "authorImage": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop",
+      "date": "Mar 15, 2025",
+      "readTime": "8 min read",
+      "category": "Design",
+      "image": "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&h=600&fit=crop",
+      "tags": ["Design", "Design Systems", "UI/UX", "Best Practices"]
+    },
+    {
+      "slug": "mastering-react-server-components",
+      "title": "Mastering React Server Components",
+      "excerpt": "A comprehensive guide to understanding and implementing React Server Components in your Next.js applications.",
+      "content": "React Server Components (RSC) represent a significant shift in how we build React applications. By allowing components to render on the server, we can reduce bundle sizes and improve performance significantly.",
+      "author": "Alex Chen",
+      "authorImage": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop",
+      "date": "Apr 01, 2024",
+      "readTime": "8 min",
+      "category": "React",
+      "image": "https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=1200&h=600&fit=crop",
+      "tags": ["React", "Next.js", "Web Dev"]
+    }
+  ],
+  "assets": [
+    {
+      "slug": "ui-kit-pro",
+      "name": "UI Kit Pro",
+      "description": "Professional Figma UI kit with 500+ components.",
+      "category": "Design Kits",
+      "image": "https://images.unsplash.com/photo-1586717791821-3f44a563eb4c?w=400&h=300&fit=crop"
+    },
+    {
+      "slug": "icon-library",
+      "name": "Icon Library",
+      "description": "2000+ vector icons in SVG and PNG formats.",
+      "category": "Icons",
+      "image": "https://images.unsplash.com/photo-1614850523296-d8c1af93d400?w=400&h=300&fit=crop"
+    }
+  ]
+}
