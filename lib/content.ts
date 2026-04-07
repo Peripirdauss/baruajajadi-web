@@ -12,7 +12,7 @@ export async function getGlobalContent() {
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS site_config (
         id VARCHAR(255) PRIMARY KEY,
-        data JSON,
+        data LONGTEXT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
@@ -26,11 +26,12 @@ export async function getGlobalContent() {
       const data = JSON.parse(fileContents)
       await db.insert(siteConfig).values({
         id: 'global',
-        data: data
+        data: JSON.stringify(data)
       })
       return data;
     }
-    return existing[0].data;
+    const resultData = existing[0].data;
+    return typeof resultData === 'string' ? JSON.parse(resultData) : resultData;
   } catch (error) {
     console.error('Migration error:', error)
     // Fallback to file if DB fails

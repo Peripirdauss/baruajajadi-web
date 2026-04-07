@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     await db.execute(sql`
       CREATE TABLE IF NOT EXISTS site_config (
         id VARCHAR(255) PRIMARY KEY,
-        data JSON,
+        data LONGTEXT,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       )
     `);
@@ -39,11 +39,11 @@ export async function POST(request: Request) {
     if (existing.length === 0) {
       await db.insert(siteConfig).values({
         id: 'global',
-        data: data
+        data: JSON.stringify(data)
       });
     } else {
       await db.update(siteConfig)
-        .set({ data: data })
+        .set({ data: JSON.stringify(data) })
         .where(eq(siteConfig.id, 'global'));
     }
     
