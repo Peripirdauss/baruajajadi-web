@@ -27,7 +27,6 @@ __v0_jsx-dev-runtime.ts
 next.user-config.*
 
 # Database & Data
-data/users.json
 *.db
 *.sqlite
 
