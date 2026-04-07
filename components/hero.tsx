@@ -1,15 +1,16 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
-import fs from 'fs/promises'
-import path from 'path'
+import { getGlobalContent } from '@/lib/content'
 
 export const dynamic = 'force-dynamic'
 
 async function getHeroData() {
-  const dataPath = path.join(process.cwd(), 'data', 'site-config.json')
   try {
-    const fileContents = await fs.readFile(dataPath, 'utf8')
-    return JSON.parse(fileContents).hero
+    const data = await getGlobalContent()
+    if (data && data.hero) {
+      return data.hero
+    }
+    throw new Error('No hero data')
   } catch (e) {
     return {
       title: "Your Digital Hub for Creation & Growth",

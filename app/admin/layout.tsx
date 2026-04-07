@@ -8,6 +8,7 @@ import Link from 'next/link'
 
 const menuItems = [
   { title: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
+  { title: 'Global Settings', icon: Settings, href: '/admin/settings' },
   { title: 'Hero Section', icon: Image, href: '/admin/hero' },
   { title: 'Tools', icon: Wrench, href: '/admin/tools' },
   { title: 'Assets', icon: Image, href: '/admin/assets' },

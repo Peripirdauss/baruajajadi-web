@@ -2,13 +2,16 @@ import { NextResponse } from 'next/server'
 import path from 'path'
 import fs from 'fs/promises'
 import { revalidatePath } from 'next/cache'
+import { db } from '@/lib/db'
+import { siteConfig } from '@/lib/db/schema'
+import { eq, sql } from 'drizzle-orm'
+import { getGlobalContent } from '@/lib/content'
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'site-config.json')
 
 export async function GET() {
   try {
-    const fileContents = await fs.readFile(DATA_FILE, 'utf8')
-    const data = JSON.parse(fileContents)
+    const data = await getGlobalContent()
     return NextResponse.json(data)
   } catch (error) {
     console.error('Error reading data:', error)
@@ -16,10 +19,40 @@ export async function GET() {
   }
 }
 
+
 export async function POST(request: Request) {
   try {
     const data = await request.json()
-    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8')
+    
+    // Ensure table exists
+    await db.execute(sql`
+      CREATE TABLE IF NOT EXISTS site_config (
+        id VARCHAR(255) PRIMARY KEY,
+        data JSON,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+      )
+    `);
+
+    // Upsert the data
+    const existing = await db.select().from(siteConfig).where(eq(siteConfig.id, 'global'));
+    
+    if (existing.length === 0) {
+      await db.insert(siteConfig).values({
+        id: 'global',
+        data: data
+      });
+    } else {
+      await db.update(siteConfig)
+        .set({ data: data })
+        .where(eq(siteConfig.id, 'global'));
+    }
+    
+    // Also save to file as backup if possible
+    try {
+      await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8')
+    } catch(e) {
+      console.warn("Could not backup to JSON file, running solely on DB.")
+    }
     
     // Purge the cache for the home page and other relevant routes
     revalidatePath('/')

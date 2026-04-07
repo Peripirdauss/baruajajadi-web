@@ -1,4 +1,4 @@
-import { mysqlTable, serial, varchar, text, timestamp, uniqueIndex } from 'drizzle-orm/mysql-core';
+import { mysqlTable, serial, varchar, text, timestamp, uniqueIndex, json } from 'drizzle-orm/mysql-core';
 
 export const users = mysqlTable('users', {
   id: serial('id').primaryKey(),
@@ -13,4 +13,10 @@ export const users = mysqlTable('users', {
   return {
     emailIndex: uniqueIndex('email_idx').on(table.email),
   }
+});
+
+export const siteConfig = mysqlTable('site_config', {
+  id: varchar('id', { length: 255 }).primaryKey(), // e.g., 'hero', 'tools', 'blog', 'assets', 'global'
+  data: json('data'),
+  updatedAt: timestamp('updated_at').defaultNow().onUpdateNow(),
 });

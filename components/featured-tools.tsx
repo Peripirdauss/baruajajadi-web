@@ -1,16 +1,17 @@
 import { Button } from '@/components/ui/button'
 import * as Icons from 'lucide-react'
 import Link from 'next/link'
-import fs from 'fs/promises'
-import path from 'path'
+import { getGlobalContent } from '@/lib/content'
 
 export const dynamic = 'force-dynamic'
 
 async function getToolsData() {
-  const dataPath = path.join(process.cwd(), 'data', 'site-config.json')
   try {
-    const fileContents = await fs.readFile(dataPath, 'utf8')
-    return JSON.parse(fileContents).tools
+    const data = await getGlobalContent()
+    if (data && data.tools) {
+      return data.tools
+    }
+    return []
   } catch (e) {
     return []
   }
