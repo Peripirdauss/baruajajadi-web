@@ -1,0 +1,12 @@
+# Deny access to sensitive files
+<FilesMatch "^(server\.js|package\.json|package-lock\.json|\.env|\.gitignore|tsconfig\.json|next\.config\.mjs|postcss\.config\.mjs)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Deny access to hidden files and directories
+RewriteEngine On
+RewriteRule ^\..* - [F,L]
+
+# Prevent directory listing
+Options -Indexes

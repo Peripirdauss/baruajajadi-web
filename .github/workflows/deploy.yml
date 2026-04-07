@@ -40,6 +40,9 @@ jobs:
           protocol: ftp
           port: 21
           local-dir: ./
+          # CAUTION: Ensure server-dir matches your "Application root" in cPanel Node.js Selector.
+          # If your app should be at the root of baruajajadi.com, this might need to be 'public_html' 
+          # or a specific folder outside of public_html.
           server-dir: ./
           # Exclude files that shouldn't be overridden or aren't needed
           exclude: |
@@ -50,6 +53,7 @@ jobs:
             data/users.json
             *.db
             *.sqlite
+            # Keep .htaccess if you want to use the one we just created
 
       - name: Restart Node.js Application
         # Rumahweb uses Phusion Passenger usually.
