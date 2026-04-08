@@ -5,6 +5,7 @@ import { eq, sql } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
 import path from 'path';
+import { setSessionCookie } from '@/lib/auth';
 
 export async function POST(request: Request) {
   try {
@@ -79,14 +80,17 @@ export async function POST(request: Request) {
     // Login successful
     console.log(`[Login Success] User: ${email} (${user.role})`);
     
+    // Create JWT Session and set Cookie via lib/auth
+    await setSessionCookie({ 
+      id: user.id, 
+      email: user.email, 
+      firstName: user.firstName, 
+      role: user.role 
+    });
+    
     return NextResponse.json({ 
-      success: true, 
-      user: { 
-        id: user.id, 
-        email: user.email, 
-        firstName: user.firstName, 
-        role: user.role 
-      } 
+      success: true,
+      role: user.role
     });
 
   } catch (error: any) {

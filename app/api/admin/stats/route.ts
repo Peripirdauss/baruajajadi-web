@@ -3,11 +3,17 @@ import { db } from '@/lib/db';
 import { users, siteConfig } from '@/lib/db/schema';
 import { sql, count, eq } from 'drizzle-orm';
 import { getGlobalContent } from '@/lib/content';
+import { getSession } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
+    const session = await getSession();
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     // 1. Get User Count
     const userResult = await db.select({ count: count() }).from(users);
     const userCount = userResult[0]?.count || 0;

@@ -38,9 +38,11 @@ export default function LoginPage() {
 
       if (res.ok) {
         toast({ title: 'Welcome Back!', description: 'Accessing your dashboard...' });
-        localStorage.setItem('user', JSON.stringify(data.user));
         
-        if (data.user.role === 'admin') {
+        // We still store basic role info for UI state, but sensitive data is now in the secure cookie
+        localStorage.setItem('user', JSON.stringify({ role: data.role }));
+        
+        if (data.role === 'admin') {
           router.push('/admin');
         } else {
           router.push('/dashboard');

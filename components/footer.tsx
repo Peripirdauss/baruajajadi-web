@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { Separator } from '@/components/ui/separator'
 import { Twitter, Github, Linkedin, Mail } from 'lucide-react'
 
@@ -13,7 +14,14 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-primary"></div>
+              <div className="h-10 w-10 relative overflow-hidden rounded-lg bg-muted/20 border border-border">
+                <Image 
+                  src="/logo.jpg" 
+                  alt="BaruAjaJadi Logo" 
+                  fill
+                  className="object-cover"
+                />
+              </div>
               <span className="text-lg font-bold text-foreground">BaruAjaJadi</span>
             </div>
             <p className="text-sm text-foreground/60">

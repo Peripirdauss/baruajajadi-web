@@ -3,13 +3,28 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Menu, X, LogIn, User, LayoutDashboard, ChevronRight } from 'lucide-react'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { Menu, X, LogIn, User, LayoutDashboard, LogOut, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function Header() {
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [isClient, setIsClient] = useState(false)
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+      localStorage.removeItem('user')
+      setUser(null)
+      router.push('/')
+      router.refresh()
+    } catch (error) {
+      console.error('Logout failed', error)
+    }
+  }
 
   useEffect(() => {
     setIsClient(true)
@@ -23,8 +38,14 @@ export function Header() {
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-8 lg:px-10">
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="h-9 w-9 rounded-xl bg-primary group-hover:rotate-6 transition-all duration-300 shadow-lg shadow-primary/20 flex items-center justify-center overflow-hidden relative">
-            <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent"></div>
+          <div className="h-10 w-10 relative overflow-hidden rounded-xl bg-muted/20 border border-border group-hover:scale-105 transition-all duration-300">
+            <Image 
+              src="/logo.jpg" 
+              alt="BaruAjaJadi Logo" 
+              fill
+              className="object-cover"
+              priority
+            />
           </div>
           <span className="text-2xl font-black text-foreground tracking-tighter group-hover:text-primary transition-colors">BaruAjaJadi</span>
         </Link>
@@ -48,11 +69,16 @@ export function Header() {
         {/* Desktop Auth Section */}
         <div className="hidden gap-4 lg:flex items-center">
           {isClient && user ? (
-            <Button size="lg" asChild className="rounded-2xl bg-accent text-accent-foreground hover:bg-accent/90 shadow-xl shadow-accent/20 font-black gap-2 active:scale-95 transition-all px-8">
-              <Link href="/dashboard">
-                <LayoutDashboard className="h-4 w-4" /> Go to Dashboard
-              </Link>
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button size="lg" asChild className="rounded-2xl bg-accent text-accent-foreground hover:bg-accent/90 shadow-xl shadow-accent/20 font-black gap-2 active:scale-95 transition-all px-8">
+                <Link href={user.role === 'admin' ? '/admin' : '/dashboard'}>
+                  <LayoutDashboard className="h-4 w-4" /> {user.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-xl text-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-all" title="Logout">
+                <LogOut className="h-5 w-5" />
+              </Button>
+            </div>
           ) : (
             <>
               <Button variant="ghost" size="lg" asChild className="font-black uppercase tracking-widest text-xs hover:bg-accent/5 active:scale-95 transition-all">
@@ -96,9 +122,16 @@ export function Header() {
           
           <div className="flex flex-col gap-3 pt-6 border-t border-border">
             {isClient && user ? (
-              <Button size="lg" asChild className="w-full h-14 rounded-2xl bg-accent text-accent-foreground font-black shadow-xl shadow-accent/20">
-                <Link href="/dashboard" onClick={() => setIsOpen(false)}>Dashboard Hub</Link>
-              </Button>
+              <>
+                <Button size="lg" asChild className="w-full h-14 rounded-2xl bg-accent text-accent-foreground font-black shadow-xl shadow-accent/20">
+                  <Link href={user.role === 'admin' ? '/admin' : '/dashboard'} onClick={() => setIsOpen(false)}>
+                    {user.role === 'admin' ? 'Admin Control Center' : 'User Dashboard'}
+                  </Link>
+                </Button>
+                <Button variant="ghost" size="lg" onClick={handleLogout} className="w-full h-14 rounded-2xl text-foreground font-black border border-border hover:bg-destructive/5 hover:text-destructive">
+                  <LogOut className="mr-2 h-5 w-5" /> Sign Out
+                </Button>
+              </>
             ) : (
               <>
                 <Button variant="outline" size="lg" asChild className="w-full h-14 rounded-2xl border-border font-black uppercase tracking-widest text-xs">

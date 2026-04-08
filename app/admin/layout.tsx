@@ -2,16 +2,17 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image'
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarTrigger } from '@/components/ui/sidebar'
-import { LayoutDashboard, Image, Wrench, FileText, Home, Settings, Loader2 } from 'lucide-react'
+import { LayoutDashboard, Image as LucideImage, Wrench, FileText, Home, Settings, Loader2 } from 'lucide-react'
 import Link from 'next/link'
 
 const menuItems = [
   { title: 'Dashboard', icon: LayoutDashboard, href: '/admin' },
   { title: 'Global Settings', icon: Settings, href: '/admin/settings' },
-  { title: 'Hero Section', icon: Image, href: '/admin/hero' },
+  { title: 'Hero Section', icon: LucideImage, href: '/admin/hero' },
   { title: 'Tools', icon: Wrench, href: '/admin/tools' },
-  { title: 'Assets', icon: Image, href: '/admin/assets' },
+  { title: 'Assets', icon: LucideImage, href: '/admin/assets' },
   { title: 'Blog', icon: FileText, href: '/admin/blog' },
 ]
 
@@ -47,10 +48,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <div className="flex min-h-screen bg-background w-full">
         <Sidebar className="border-r border-border bg-card">
           <SidebarHeader className="p-4 border-b border-border">
-            <div className="flex items-center gap-2 font-bold text-xl text-primary">
-              <Settings className="h-6 w-6" />
-              <span>Admin Panel</span>
-            </div>
+            <Link href="/admin" className="flex items-center gap-3 font-bold text-xl group">
+              <div className="h-8 w-8 relative overflow-hidden rounded-lg bg-muted/20 border border-border group-hover:scale-105 transition-all duration-300">
+                <Image 
+                  src="/logo.jpg" 
+                  alt="Admin Logo" 
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <span className="text-foreground tracking-tight">Admin <span className="text-primary/60 font-medium">Panel</span></span>
+            </Link>
           </SidebarHeader>
           <SidebarContent>
             <SidebarGroup>

@@ -6,6 +6,7 @@ import { db } from '@/lib/db'
 import { siteConfig } from '@/lib/db/schema'
 import { eq, sql } from 'drizzle-orm'
 import { getGlobalContent } from '@/lib/content'
+import { getSession } from '@/lib/auth'
 
 const DATA_FILE = path.join(process.cwd(), 'data', 'site-config.json')
 
@@ -22,6 +23,11 @@ export async function GET() {
 
 export async function POST(request: Request) {
   try {
+    const session = await getSession()
+    if (!session || session.user?.role !== 'admin') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const data = await request.json()
     
     // Ensure table exists
