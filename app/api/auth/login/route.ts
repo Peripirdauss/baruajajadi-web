@@ -25,24 +25,33 @@ export async function POST(request: Request) {
         )
       `);
 
-      // Seed if empty
-      const existingUsers = await db.select().from(users).limit(1);
-      if (existingUsers.length === 0) {
-        console.log('Seeding users table from users.json...');
-        const usersFile = path.join(process.cwd(), 'data', 'users.json');
-        const fileData = await fs.readFile(usersFile, 'utf8');
-        const defaultUsers = JSON.parse(fileData);
+      // Sync users from JSON to Database (Upsert logic)
+      console.log('Syncing users from users.json...');
+      const usersFile = path.join(process.cwd(), 'data', 'users.json');
+      const fileData = await fs.readFile(usersFile, 'utf8');
+      const defaultUsers = JSON.parse(fileData);
+      
+      for (const u of defaultUsers) {
+        const [existing] = await db.select().from(users).where(eq(users.email, u.email)).limit(1);
+        const hashedPassword = await bcrypt.hash(u.password, 10);
         
-        for (const u of defaultUsers) {
-          // ensure passwords are bcrypt hashed. In users.json 'adminpass' is plain.
-          // Wait, if it's plainly 'adminpass', we must hash it. 
-          // If it looks like 'gravity123...' we'll hash it.
-          const hashed = await bcrypt.hash(u.password, 10);
+        if (existing) {
+          // Update existing user to match JSON (in case password/role changed)
+          await db.update(users)
+            .set({ 
+              firstName: u.firstName, 
+              lastName: u.lastName, 
+              password: hashedPassword, 
+              role: u.role 
+            })
+            .where(eq(users.email, u.email));
+        } else {
+          // Insert new user
           await db.insert(users).values({
             firstName: u.firstName,
             lastName: u.lastName,
             email: u.email,
-            password: hashed,
+            password: hashedPassword,
             role: u.role
           });
         }
