@@ -31,6 +31,11 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
 
+      - name: Prepare Restart Token
+        run: |
+          mkdir -p tmp
+          touch tmp/restart.txt
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -48,15 +53,6 @@ jobs:
             **/.git*/**
             **/node_modules/**
             .env*
-            data/users.json
             *.db
             *.sqlite
             # Keep .htaccess if you want to use the one we just created
-
-      - name: Restart Node.js Application
-        # Rumahweb uses Phusion Passenger usually.
-        # Touching tmp/restart.txt tells it to reload the app.
-        run: |
-          mkdir -p tmp
-          touch tmp/restart.txt
-        # If your hosting requires an SSH command to restart, you can use appleboy/ssh-action
