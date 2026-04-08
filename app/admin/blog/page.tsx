@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, Trash2, Save, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, FileText } from 'lucide-react';
+import { BlogEditor } from '@/components/admin/editor';
 import { useToast } from '@/hooks/use-toast';
 
 interface Post {
@@ -246,13 +247,20 @@ export default function AdminBlogPage() {
                   onChange={(e) => setFormData({...formData, image: e.target.value})} 
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="content">Content (Markdown supported)</Label>
-                <Textarea 
-                  id="content" 
-                  rows={10}
-                  value={formData.content} 
-                  onChange={(e) => setFormData({...formData, content: e.target.value})} 
+              <div className="space-y-4 pt-4">
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="content" className="text-lg font-black tracking-tight flex items-center gap-2">
+                    <FileText className="h-5 w-5 text-accent" />
+                    Story Content
+                  </Label>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-accent bg-accent/10 px-3 py-1 rounded-full">
+                    Visual Editor Active
+                  </span>
+                </div>
+                <BlogEditor 
+                  content={formData.content} 
+                  onChange={(html) => setFormData({...formData, content: html})} 
+                  placeholder="Tell your story with rich formatting and structure..."
                 />
               </div>
             </div>

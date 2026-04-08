@@ -90,11 +90,9 @@ export default function UserDashboard() {
       {/* Sidebar - Enhanced for clickability with asChild pattern */}
       <aside className="w-64 border-r border-border bg-card/60 backdrop-blur-3xl p-6 flex flex-col justify-between sticky top-0 h-screen z-20">
         <div className="space-y-8">
-          <Link href="/" asChild>
-            <button className="flex items-center gap-2 group cursor-pointer w-full text-left outline-none">
-              <div className="h-8 w-8 rounded-lg bg-primary group-hover:rotate-12 transition-all duration-300 shadow-lg shadow-primary/20"></div>
-              <span className="text-xl font-bold group-hover:text-primary transition-colors">BaruAjaJadi</span>
-            </button>
+          <Link href="/" className="flex items-center gap-2 group cursor-pointer w-full text-left outline-none">
+            <div className="h-8 w-8 rounded-lg bg-primary group-hover:rotate-12 transition-all duration-300 shadow-lg shadow-primary/20"></div>
+            <span className="text-xl font-bold group-hover:text-primary transition-colors">BaruAjaJadi</span>
           </Link>
           
           <nav className="space-y-2">
@@ -216,37 +214,35 @@ export default function UserDashboard() {
 
               <div className="grid gap-8">
                 {recentArticles.length > 0 ? recentArticles.map((article: any) => (
-                  <Link key={article.slug} href={`/blog/${article.slug}`} asChild>
-                    <button className="block group w-full text-left outline-none cursor-pointer active:scale-[0.98] transition-transform">
-                      <Card className={cn(
-                        "border-border/50 shadow-lg hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] hover:border-accent/30 transition-all rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-md",
-                        "hover:bg-card/80"
-                      )}>
-                        <CardContent className="p-0 flex flex-col md:flex-row min-h-48">
-                          <div className="w-full md:w-64 h-48 md:h-auto shrink-0 relative overflow-hidden">
-                            <img 
-                              src={article.image} 
-                              alt={article.title} 
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                            />
-                            <div className="absolute top-4 left-4">
-                              <span className="text-white text-[10px] font-black uppercase tracking-widest bg-accent px-3 py-1.5 rounded-full shadow-lg">
-                                {article.category}
-                              </span>
-                            </div>
+                  <Link key={article.slug} href={`/blog/${article.slug}`} className="block group w-full text-left outline-none cursor-pointer active:scale-[0.98] transition-transform">
+                    <Card className={cn(
+                      "border-border/50 shadow-lg hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.15)] hover:border-accent/30 transition-all rounded-[2.5rem] overflow-hidden bg-card/40 backdrop-blur-md",
+                      "hover:bg-card/80"
+                    )}>
+                      <CardContent className="p-0 flex flex-col md:flex-row min-h-48">
+                        <div className="w-full md:w-64 h-48 md:h-auto shrink-0 relative overflow-hidden">
+                          <img 
+                            src={article.image} 
+                            alt={article.title} 
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                          />
+                          <div className="absolute top-4 left-4">
+                            <span className="text-white text-[10px] font-black uppercase tracking-widest bg-accent px-3 py-1.5 rounded-full shadow-lg">
+                              {article.category}
+                            </span>
                           </div>
-                          <div className="p-8 flex flex-col justify-center flex-1">
-                            <div className="flex items-center gap-4 text-[10px] font-black text-foreground/30 uppercase tracking-[0.2em] mb-4">
-                              <span className="flex items-center gap-2"><Clock className="h-3 w-3" /> {article.readTime}</span>
-                              <span className="w-2 h-2 rounded-full bg-accent/20"></span>
-                              <span className="text-accent/60">New Update</span>
-                            </div>
-                            <h3 className="font-black text-2xl leading-tight mb-4 group-hover:text-accent transition-colors">{article.title}</h3>
-                            <p className="text-foreground/50 line-clamp-2 leading-relaxed font-medium">{article.excerpt}</p>
+                        </div>
+                        <div className="p-8 flex flex-col justify-center flex-1">
+                          <div className="flex items-center gap-4 text-[10px] font-black text-foreground/30 uppercase tracking-[0.2em] mb-4">
+                            <span className="flex items-center gap-2"><Clock className="h-3 w-3" /> {article.readTime}</span>
+                            <span className="w-2 h-2 rounded-full bg-accent/20"></span>
+                            <span className="text-accent/60">New Update</span>
                           </div>
-                        </CardContent>
-                      </Card>
-                    </button>
+                          <h3 className="font-black text-2xl leading-tight mb-4 group-hover:text-accent transition-colors">{article.title}</h3>
+                          <p className="text-foreground/50 line-clamp-2 leading-relaxed font-medium">{article.excerpt}</p>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </Link>
                 )) : (
                   <div className="p-32 text-center border-4 border-dashed border-border rounded-[4rem] bg-accent/5 flex flex-col items-center justify-center space-y-6">

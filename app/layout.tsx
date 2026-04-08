@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
-import { Analytics } from '@vercel/analytics/next'
 import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
@@ -17,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: content?.metadata?.title || defaultTitle,
     description: content?.metadata?.description || defaultDescription,
-    generator: 'v0.app',
+
     icons: {
       icon: [
         {
@@ -48,7 +47,7 @@ export default function RootLayout({
       <body className="font-sans antialiased" suppressHydrationWarning>
         {children}
         <Toaster />
-        <Analytics />
+
       </body>
     </html>
   )

@@ -10,7 +10,7 @@ export function Skills() {
     },
     {
       category: 'Tools & Platforms',
-      skills: ['Figma', 'Adobe Creative Suite', 'Git', 'Vercel', 'Supabase', 'GraphQL']
+      skills: ['Figma', 'Adobe Creative Suite', 'Git', 'Self-Hosting', 'Supabase', 'GraphQL']
     },
     {
       category: 'Content & Strategy',
