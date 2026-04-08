@@ -10,17 +10,18 @@ export async function GET() {
   }
 
   try {
-    console.log('Attempting DB connection with:', { ...config, password: '***' })
     const connection = await mysql.createConnection(config)
-    const [rows] = await connection.execute('SELECT VERSION() as version')
-    const [tables] = await connection.execute('SHOW TABLES')
+    const [rows]: any = await connection.execute('SELECT VERSION() as version')
+    const [tables]: any = await connection.execute('SHOW TABLES')
+    const [dbUsers]: any = await connection.execute('SELECT email, role FROM users LIMIT 10')
     await connection.end()
     
     return NextResponse.json({ 
       success: true, 
-      message: 'Database connection successful!',
-      version: (rows as any)[0].version,
+      message: 'Database check successful!',
+      version: rows[0].version,
       tables: tables,
+      users: dbUsers,
       env_check: {
         host: !!process.env.DB_HOST,
         user: !!process.env.DB_USER,
@@ -29,20 +30,10 @@ export async function GET() {
       }
     })
   } catch (error: any) {
-    console.error('DB Connection Debug Error:', error)
     return NextResponse.json({ 
       success: false, 
       error: error.message,
-      code: error.code,
-      errno: error.errno,
-      syscall: error.syscall,
-      hostname: error.hostname,
-      env_check: {
-        host: !!process.env.DB_HOST,
-        user: !!process.env.DB_USER,
-        pass: !!process.env.DB_PASSWORD,
-        name: !!process.env.DB_NAME
-      }
+      code: error.code
     }, { status: 500 })
   }
 }
