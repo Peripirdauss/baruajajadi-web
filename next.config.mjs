@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: '/perip',
+  assetPrefix: '/perip',
   typescript: {
     ignoreBuildErrors: true,
   },
