@@ -35,57 +35,55 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60 transition-all duration-300">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-5 sm:px-8 lg:px-10">
-        <Link href="/" className="flex items-center gap-3 group">
-          <div className="h-10 w-10 relative overflow-hidden rounded-xl bg-muted/20 border border-border group-hover:scale-105 transition-all duration-300">
+    <header className="sticky top-0 z-50 glass transition-all duration-300">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8 lg:px-10">
+        <Link href="/" className="flex items-center gap-2 group">
+          <div className="h-9 w-9 relative overflow-hidden rounded-lg bg-primary/20 border border-primary/20 group-hover:scale-110 transition-all duration-300">
             <Image 
               src="/logo.jpg" 
-              alt="BaruAjaJadi Logo" 
+              alt="Logo" 
               fill
               className="object-cover"
               priority
             />
           </div>
-          <span className="text-2xl font-black text-foreground tracking-tighter group-hover:text-primary transition-colors">BaruAjaJadi</span>
+          <span className="text-xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">BaruAjaJadi</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden flex-1 justify-center gap-10 lg:flex">
-          <Link href="/tools" className="text-sm font-black uppercase tracking-widest text-foreground/40 transition-all hover:text-accent hover:translate-y-[-1px]">
-            Tools
-          </Link>
-          <Link href="/assets" className="text-sm font-black uppercase tracking-widest text-foreground/40 transition-all hover:text-accent hover:translate-y-[-1px]">
-            Assets
-          </Link>
-          <Link href="/blog" className="text-sm font-black uppercase tracking-widest text-foreground/40 transition-all hover:text-accent hover:translate-y-[-1px]">
-            Blog
-          </Link>
-          <Link href="/about" className="text-sm font-black uppercase tracking-widest text-foreground/40 transition-all hover:text-accent hover:translate-y-[-1px]">
-            About
-          </Link>
+        <div className="hidden flex-1 justify-center gap-8 lg:flex">
+          {['Tools', 'Assets', 'Blog', 'About'].map((item) => (
+            <Link 
+              key={item}
+              href={`/${item.toLowerCase()}`} 
+              className="text-sm font-medium text-muted-foreground transition-all hover:text-primary relative group"
+            >
+              {item}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+            </Link>
+          ))}
         </div>
 
         {/* Desktop Auth Section */}
         <div className="hidden gap-4 lg:flex items-center">
           {isClient && user ? (
             <div className="flex items-center gap-3">
-              <Button size="lg" asChild className="rounded-2xl bg-accent text-accent-foreground hover:bg-accent/90 shadow-xl shadow-accent/20 font-black gap-2 active:scale-95 transition-all px-8">
+              <Button size="lg" asChild className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold px-6">
                 <Link href={user.role === 'admin' ? '/admin' : '/dashboard'}>
-                  <LayoutDashboard className="h-4 w-4" /> {user.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
+                  <LayoutDashboard className="h-4 w-4 mr-2" /> {user.role === 'admin' ? 'Control Center' : 'Dashboard'}
                 </Link>
               </Button>
-              <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-xl text-foreground/40 hover:text-destructive hover:bg-destructive/10 transition-all" title="Logout">
+              <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all">
                 <LogOut className="h-5 w-5" />
               </Button>
             </div>
           ) : (
             <>
-              <Button variant="ghost" size="lg" asChild className="font-black uppercase tracking-widest text-xs hover:bg-accent/5 active:scale-95 transition-all">
+              <Button variant="ghost" size="lg" asChild className="font-bold text-sm px-6">
                 <Link href="/login">Sign In</Link>
               </Button>
-              <Button size="lg" asChild className="rounded-2xl bg-foreground text-background hover:bg-foreground/90 font-black shadow-xl shadow-foreground/10 active:scale-95 transition-all px-8">
-                <Link href="/signup">Get Early Access</Link>
+              <Button size="lg" asChild className="rounded-full bg-foreground text-background hover:bg-foreground/90 font-bold shadow-xl shadow-foreground/10 px-8">
+                <Link href="/signup">Get Access</Link>
               </Button>
             </>
           )}
@@ -94,7 +92,7 @@ export function Header() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-2 rounded-xl bg-secondary/50 border border-border text-foreground hover:bg-accent/10 transition-colors"
+          className="lg:hidden p-2 rounded-lg glass text-foreground"
           aria-label="Toggle menu"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -103,42 +101,40 @@ export function Header() {
 
       {/* Mobile Navigation */}
       <div className={cn(
-        "absolute top-full left-0 w-full bg-background border-b border-border lg:hidden transition-all duration-300 overflow-hidden",
-        isOpen ? "max-h-[500px] opacity-100 py-8 px-6 shadow-2xl" : "max-h-0 opacity-0 py-0 px-0"
+        "absolute top-full left-0 w-full glass lg:hidden transition-all duration-300 overflow-hidden",
+        isOpen ? "max-h-screen opacity-100 py-8 px-6" : "max-h-0 opacity-0"
       )}>
         <div className="flex flex-col gap-6">
-          <Link href="/tools" onClick={() => setIsOpen(false)} className="text-xl font-black text-foreground/40 hover:text-accent flex items-center justify-between">
-            Tools <ChevronRight className="h-5 w-5" />
-          </Link>
-          <Link href="/assets" onClick={() => setIsOpen(false)} className="text-xl font-black text-foreground/40 hover:text-accent flex items-center justify-between">
-            Assets <ChevronRight className="h-5 w-5" />
-          </Link>
-          <Link href="/blog" onClick={() => setIsOpen(false)} className="text-xl font-black text-foreground/40 hover:text-accent flex items-center justify-between">
-            Blog <ChevronRight className="h-5 w-5" />
-          </Link>
-          <Link href="/about" onClick={() => setIsOpen(false)} className="text-xl font-black text-foreground/40 hover:text-accent flex items-center justify-between">
-            About <ChevronRight className="h-5 w-5" />
-          </Link>
+          {['Tools', 'Assets', 'Blog', 'About'].map((item) => (
+            <Link 
+              key={item}
+              href={`/${item.toLowerCase()}`} 
+              onClick={() => setIsOpen(false)} 
+              className="text-2xl font-bold text-foreground hover:text-primary flex items-center justify-between"
+            >
+              {item} <ChevronRight className="h-5 w-5" />
+            </Link>
+          ))}
           
-          <div className="flex flex-col gap-3 pt-6 border-t border-border">
+          <div className="flex flex-col gap-3 pt-6 border-t border-border/50">
             {isClient && user ? (
               <>
-                <Button size="lg" asChild className="w-full h-14 rounded-2xl bg-accent text-accent-foreground font-black shadow-xl shadow-accent/20">
+                <Button size="lg" asChild className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-bold">
                   <Link href={user.role === 'admin' ? '/admin' : '/dashboard'} onClick={() => setIsOpen(false)}>
                     {user.role === 'admin' ? 'Admin Control Center' : 'User Dashboard'}
                   </Link>
                 </Button>
-                <Button variant="ghost" size="lg" onClick={handleLogout} className="w-full h-14 rounded-2xl text-foreground font-black border border-border hover:bg-destructive/5 hover:text-destructive">
+                <Button variant="ghost" size="lg" onClick={handleLogout} className="w-full h-14 rounded-xl text-foreground font-bold border border-border">
                   <LogOut className="mr-2 h-5 w-5" /> Sign Out
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="outline" size="lg" asChild className="w-full h-14 rounded-2xl border-border font-black uppercase tracking-widest text-xs">
+                <Button variant="outline" size="lg" asChild className="w-full h-14 rounded-xl border-border font-bold">
                   <Link href="/login" onClick={() => setIsOpen(false)}>Sign In</Link>
                 </Button>
-                <Button size="lg" asChild className="w-full h-14 rounded-2xl bg-foreground text-background font-black shadow-xl shadow-foreground/10">
-                  <Link href="/signup" onClick={() => setIsOpen(false)}>Get Access Now</Link>
+                <Button size="lg" asChild className="w-full h-14 rounded-xl bg-foreground text-background font-bold shadow-xl shadow-foreground/10">
+                  <Link href="/signup" onClick={() => setIsOpen(false)}>Get Started</Link>
                 </Button>
               </>
             )}

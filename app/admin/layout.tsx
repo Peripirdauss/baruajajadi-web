@@ -45,11 +45,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   }
   return (
     <SidebarProvider>
-      <div className="flex min-h-screen bg-background w-full">
-        <Sidebar className="border-r border-border bg-card">
-          <SidebarHeader className="p-4 border-b border-border">
-            <Link href="/admin" className="flex items-center gap-3 font-bold text-xl group">
-              <div className="h-8 w-8 relative overflow-hidden rounded-lg bg-muted/20 border border-border group-hover:scale-105 transition-all duration-300">
+      <div className="flex min-h-screen bg-background w-full selection:bg-primary/30">
+        <Sidebar className="border-r border-border/50 glass">
+          <SidebarHeader className="p-6 border-b border-border/50">
+            <Link href="/admin" className="flex items-center gap-3 group">
+              <div className="h-10 w-10 relative overflow-hidden rounded-xl bg-primary/20 border border-primary/20 group-hover:scale-110 transition-all duration-500 shadow-lg shadow-primary/10">
                 <Image 
                   src="/logo.jpg" 
                   alt="Admin Logo" 
@@ -57,20 +57,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   className="object-cover"
                 />
               </div>
-              <span className="text-foreground tracking-tight">Admin <span className="text-primary/60 font-medium">Panel</span></span>
+              <div className="flex flex-col">
+                <span className="text-foreground font-black tracking-tighter text-lg leading-none">MISSION</span>
+                <span className="text-primary font-mono text-[10px] tracking-[0.2em] font-bold">CONTROL</span>
+              </div>
             </Link>
           </SidebarHeader>
-          <SidebarContent>
+          <SidebarContent className="p-4">
             <SidebarGroup>
-              <SidebarGroupLabel>Management</SidebarGroupLabel>
+              <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/60 mb-4 px-2">System Management</SidebarGroupLabel>
               <SidebarGroupContent>
-                <SidebarMenu>
+                <SidebarMenu className="gap-2">
                   {menuItems.map((item) => (
                     <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild tooltip={item.title}>
-                        <Link href={item.href} className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
-                          <item.icon className="h-5 w-5" />
-                          <span>{item.title}</span>
+                      <SidebarMenuButton asChild tooltip={item.title} className="h-11 rounded-xl transition-all duration-300 hover:glass hover:translate-x-1 group">
+                        <Link href={item.href} className="flex items-center gap-3 px-4">
+                          <item.icon className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                          <span className="font-medium group-hover:text-foreground transition-colors">{item.title}</span>
+                          <div className="ml-auto w-1 h-1 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
                         </Link>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -83,10 +87,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <SidebarGroupContent>
                 <SidebarMenu>
                   <SidebarMenuItem>
-                    <SidebarMenuButton asChild>
-                      <Link href="/" className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors text-muted-foreground">
+                    <SidebarMenuButton asChild className="h-11 rounded-xl hover:bg-destructive/10 group">
+                      <Link href="/" className="flex items-center gap-3 px-4 text-muted-foreground group-hover:text-destructive transition-colors">
                         <Home className="h-5 w-5" />
-                        <span>Back to Site</span>
+                        <span className="font-medium">Exit Terminal</span>
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -96,12 +100,24 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </SidebarContent>
         </Sidebar>
         
-        <main className="flex-1 overflow-auto">
-          <header className="sticky top-0 z-10 flex h-16 items-center border-b border-border bg-background/95 px-6 backdrop-blur">
-            <SidebarTrigger className="mr-4" />
-            <div className="font-semibold text-lg">Control Center</div>
+        <main className="flex-1 overflow-auto relative">
+          {/* Subtle background glow */}
+          <div className="absolute top-0 right-0 w-1/2 h-1/2 bg-primary/5 blur-[120px] -z-10 pointer-events-none"></div>
+          
+          <header className="sticky top-0 z-30 flex h-16 items-center border-b border-border/50 glass px-8">
+            <SidebarTrigger className="mr-6 hover:text-primary transition-colors" />
+            <div className="flex items-center gap-4">
+              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></div>
+              <div className="font-mono text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">System: <span className="text-foreground">Online</span></div>
+            </div>
+            <div className="ml-auto flex items-center gap-4">
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase">Local Time</span>
+                <span className="text-xs font-bold">{new Date().toLocaleTimeString()}</span>
+              </div>
+            </div>
           </header>
-          <div className="p-8 max-w-6xl mx-auto">
+          <div className="p-8 lg:p-12 max-w-7xl mx-auto animate-in fade-in duration-700">
             {children}
           </div>
         </main>
@@ -109,3 +125,4 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     </SidebarProvider>
   )
 }
+

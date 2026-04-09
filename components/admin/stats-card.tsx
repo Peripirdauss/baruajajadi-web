@@ -16,27 +16,31 @@ interface StatsCardProps {
 
 export function StatsCard({ title, value, description, icon: Icon, trend, className }: StatsCardProps) {
   return (
-    <Card className={cn("overflow-hidden border-border/50 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300", className)}>
+    <Card className={cn("relative overflow-hidden glass-card group hover:translate-y-[-2px] transition-all duration-500", className)}>
+      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
-        <div className="h-8 w-8 rounded-lg bg-accent/10 flex items-center justify-center">
-          <Icon className="h-4 w-4 text-accent" />
+        <CardTitle className="text-[10px] uppercase tracking-[0.2em] font-bold text-muted-foreground/80">{title}</CardTitle>
+        <div className="h-9 w-9 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:scale-110 group-hover:bg-primary/20 transition-all">
+          <Icon className="h-5 w-5 text-primary" />
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex items-baseline justify-between">
-          <div className="text-3xl font-bold tracking-tight">{value}</div>
+        <div className="flex items-baseline justify-between mb-1">
+          <div className="text-3xl font-mono font-bold tracking-tighter">{value}</div>
           {trend && (
-            <div className={cn("text-xs font-bold px-2 py-0.5 rounded-full bg-accent/5", trend.color)}>
+            <div className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full ring-1 ring-inset", 
+              trend.color === 'text-emerald-500' ? "bg-emerald-500/10 ring-emerald-500/20 text-emerald-500" : "bg-destructive/10 ring-destructive/20 text-destructive"
+            )}>
               {trend.percentage}
             </div>
           )}
         </div>
-        <p className="text-xs text-muted-foreground mt-1 font-medium">{description}</p>
+        <p className="text-xs text-muted-foreground font-medium">{description}</p>
         
-        {/* Subtle decorative element */}
-        <div className="absolute -bottom-6 -right-6 h-24 w-24 bg-accent/5 rounded-full blur-2xl group-hover:bg-accent/10 transition-colors" />
+        {/* Decorative background glow */}
+        <div className="absolute -bottom-8 -right-8 h-24 w-24 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
       </CardContent>
     </Card>
   );
 }
+
