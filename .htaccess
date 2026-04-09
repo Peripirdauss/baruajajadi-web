@@ -1,3 +1,4 @@
+# Forced Reload: 2026-04-09
 # Deny access to sensitive files
 <FilesMatch "^(server\.js|package\.json|package-lock\.json|\.env|\.gitignore|tsconfig\.json|next\.config\.mjs|postcss\.config\.mjs)$">
     Order allow,deny
