@@ -1,3 +1,4 @@
+import { CheckCircle } from "lucide-react";
 export function CTA() {
   return (
     <section className="relative py-24 sm:py-32 overflow-hidden">
