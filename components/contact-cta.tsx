@@ -4,10 +4,9 @@ export function ContactCTA() {
       <div className="mx-auto max-w-4xl">
         <div className="space-y-8">
           <div className="text-center space-y-4">
-            <h2 className="text-3xl font-bold">Let&apos;s Connect</h2>
-            <p className="text-foreground/60 text-lg max-w-2xl mx-auto">
-              Whether you have a collaboration idea, want to learn more about my work, or just want to say hello, 
-              I&apos;d love to hear from you.
+            <h2 className="text-3xl font-black lowercase tracking-tight">mau tanya-tanya?</h2>
+            <p className="text-foreground/60 text-lg max-w-2xl mx-auto lowercase font-medium">
+              bingung mulai dari mana atau mau request tools sakti sendiri? santai aja, chat kita kapan aja ya.
             </p>
           </div>
 
@@ -17,8 +16,8 @@ export function ContactCTA() {
               className="group rounded-lg border border-border bg-card p-6 hover:border-accent hover:bg-accent/5 transition-all text-center"
             >
               <div className="text-2xl mb-3">✉️</div>
-              <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors mb-2">Email</h3>
-              <p className="text-sm text-foreground/60">hello@baruajajadi.com</p>
+              <h3 className="font-black text-foreground group-hover:text-accent transition-colors mb-2 lowercase">Email</h3>
+              <p className="text-sm text-foreground/60 lowercase">hello@baruajajadi.com</p>
             </a>
 
             <a
@@ -26,8 +25,8 @@ export function ContactCTA() {
               className="group rounded-lg border border-border bg-card p-6 hover:border-accent hover:bg-accent/5 transition-all text-center"
             >
               <div className="text-2xl mb-3">𝕏</div>
-              <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors mb-2">Twitter</h3>
-              <p className="text-sm text-foreground/60">@baruajajadi</p>
+              <h3 className="font-black text-foreground group-hover:text-accent transition-colors mb-2 lowercase">Twitter</h3>
+              <p className="text-sm text-foreground/60 lowercase">@baruajajadi</p>
             </a>
 
             <a
@@ -35,18 +34,18 @@ export function ContactCTA() {
               className="group rounded-lg border border-border bg-card p-6 hover:border-accent hover:bg-accent/5 transition-all text-center"
             >
               <div className="text-2xl mb-3">💼</div>
-              <h3 className="font-semibold text-foreground group-hover:text-accent transition-colors mb-2">LinkedIn</h3>
-              <p className="text-sm text-foreground/60">in/baruajajadi</p>
+              <h3 className="font-black text-foreground group-hover:text-accent transition-colors mb-2 lowercase">LinkedIn</h3>
+              <p className="text-sm text-foreground/60 lowercase">in/baruajajadi</p>
             </a>
           </div>
 
           <div className="text-center space-y-4 pt-6 border-t border-border">
-            <h3 className="font-semibold text-foreground">Available For</h3>
+            <h3 className="font-black text-foreground lowercase tracking-tight">bisa bantu apa?</h3>
             <div className="flex flex-wrap justify-center gap-3">
-              {['Collaborations', 'Speaking', 'Consulting', 'Partnerships', 'Mentoring'].map((item) => (
+              {['kolaborasi', 'konsultasi', 'partnership', 'custom tools', 'mentoring'].map((item) => (
                 <span
                   key={item}
-                  className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-medium border border-accent/20"
+                  className="inline-block px-4 py-2 rounded-full bg-accent/10 text-accent text-sm font-black border border-accent/20 lowercase"
                 >
                   {item}
                 </span>

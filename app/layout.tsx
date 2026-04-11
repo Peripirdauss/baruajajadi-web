@@ -1,10 +1,13 @@
 import type { Metadata } from 'next'
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Poppins } from 'next/font/google'
 import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 
-const _geist = Geist({ subsets: ["latin"] });
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
+const poppins = Poppins({ 
+  subsets: ["latin"], 
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  variable: '--font-poppins'
+});
 
 import { getGlobalContent } from '@/lib/content'
 
@@ -20,10 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [
         {
-          url: '/logo.jpg',
+          url: '/perip/logo.png',
         },
       ],
-      apple: '/logo.jpg',
+      apple: '/perip/logo.png',
     },
   }
 }
@@ -34,11 +37,17 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark" style={{ colorScheme: 'dark' }}>
-      <body className="font-sans antialiased" suppressHydrationWarning>
-        {children}
+    <html lang="en" className="light" style={{ colorScheme: 'light' }}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100..900&display=swap" rel="stylesheet" />
+      </head>
+      <body className={`${poppins.variable} font-sans antialiased`} suppressHydrationWarning>
+        <div className="relative min-h-screen">
+          {children}
+        </div>
         <Toaster />
-
       </body>
     </html>
   )

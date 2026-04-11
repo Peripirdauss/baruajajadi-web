@@ -4,26 +4,25 @@ export function AboutHero() {
       <div className="mx-auto max-w-4xl">
         <div className="space-y-8">
           <div className="space-y-4">
-            <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl text-pretty">
-              Digital Creator & Innovation Enthusiast
+            <h1 className="text-4xl font-bold sm:text-5xl lg:text-6xl text-pretty lowercase tracking-tighter">
+              cerita kita & misi bantu kamu cuan 💸
             </h1>
-            <p className="text-xl text-foreground/60 text-pretty">
-              Crafting tools, sharing knowledge, and building beautiful digital experiences
+            <p className="text-xl text-foreground/70 text-pretty lowercase font-normal">
+              kita bikin baruajajadi buat kamu pejuang konten, brand owner, & affiliate yang pengen fokus jualan tanpa pusing urusan administrasi.
             </p>
           </div>
 
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-primary">10+</div>
-              <p className="text-sm text-foreground/60">Years of Experience</p>
+              <p className="text-sm font-bold text-foreground/60 lowercase">brand dibantu</p>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-primary">50K+</div>
-              <p className="text-sm text-foreground/60">Community Members</p>
+              <div className="text-3xl font-black text-primary">500+</div>
+              <p className="text-sm font-bold text-foreground/60 lowercase">aset siap pakai</p>
             </div>
             <div className="space-y-2">
-              <div className="text-3xl font-bold text-primary">100+</div>
-              <p className="text-sm text-foreground/60">Resources Created</p>
+              <div className="text-3xl font-black text-primary">20+</div>
+              <p className="text-sm font-bold text-foreground/60 lowercase">tools sakti</p>
             </div>
           </div>
         </div>

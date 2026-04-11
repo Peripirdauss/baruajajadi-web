@@ -16,7 +16,7 @@ export function Header() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
+      await fetch('/perip/api/auth/logout', { method: 'POST' })
       localStorage.removeItem('user')
       setUser(null)
       router.push('/')
@@ -35,55 +35,63 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 glass transition-all duration-300">
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 sm:px-8 lg:px-10">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="h-9 w-9 relative overflow-hidden rounded-lg bg-primary/20 border border-primary/20 group-hover:scale-110 transition-all duration-300">
-            <Image 
-              src="/logo.jpg" 
-              alt="Logo" 
-              fill
-              className="object-cover"
-              priority
-            />
+    <header className="sticky top-0 z-50 glass border-b border-border/40 transition-all duration-300">
+      <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 sm:px-8 lg:px-10">
+        <Link href="/" className="group">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 relative overflow-hidden rounded-xl bg-primary shadow-lg shadow-primary/20 group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
+              <Image 
+                src="/perip/logo.png" 
+                alt="Logo" 
+                width={40}
+                height={40}
+                className="object-contain p-1.5"
+                priority
+              />
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-bold text-foreground tracking-tight lowercase leading-none">baru<span className="text-primary">aja</span>jadi</span>
+              <span className="text-[10px] font-medium text-muted-foreground/60 leading-none">sat-set & anti ribet 🔥</span>
+            </div>
           </div>
-          <span className="text-xl font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">BaruAjaJadi</span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden flex-1 justify-center gap-8 lg:flex">
-          {['Tools', 'Assets', 'Blog', 'About'].map((item) => (
+        <div className="hidden flex-1 justify-center gap-10 lg:flex">
+          {['tools', 'assets', 'blog', 'about'].map((item) => (
             <Link 
               key={item}
               href={`/${item.toLowerCase()}`} 
-              className="text-sm font-medium text-muted-foreground transition-all hover:text-primary relative group"
+              className="text-sm font-bold text-muted-foreground/70 transition-all hover:text-primary relative group lowercase tracking-tight"
             >
-              {item}
-              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+              {item === 'assets' ? 'pilihan' : item === 'blog' ? 'cerita' : item === 'about' ? 'tentang' : item}
+              <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full opacity-50"></span>
             </Link>
           ))}
         </div>
 
         {/* Desktop Auth Section */}
-        <div className="hidden gap-4 lg:flex items-center">
+        <div className="hidden gap-3 lg:flex items-center">
           {isClient && user ? (
             <div className="flex items-center gap-3">
-              <Button size="lg" asChild className="rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/20 font-bold px-6">
+              <Button size="lg" asChild className="rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/10 font-bold px-6 h-11">
                 <Link href={user.role === 'admin' ? '/admin' : '/dashboard'}>
-                  <LayoutDashboard className="h-4 w-4 mr-2" /> {user.role === 'admin' ? 'Control Center' : 'Dashboard'}
+                  <div className="flex items-center">
+                    <LayoutDashboard className="h-4 w-4 mr-2" /> {user.role === 'admin' ? 'Pusat Kontrol Cuan' : 'Koleksi Tools'}
+                  </div>
                 </Link>
               </Button>
-              <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-full text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all">
+              <Button variant="ghost" size="icon" onClick={handleLogout} className="rounded-xl text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-all h-11 w-11">
                 <LogOut className="h-5 w-5" />
               </Button>
             </div>
           ) : (
             <>
-              <Button variant="ghost" size="lg" asChild className="font-bold text-sm px-6">
-                <Link href="/login">Sign In</Link>
+              <Button variant="ghost" size="lg" asChild className="font-bold text-sm lowercase tracking-tight px-6 h-11 hover:bg-primary/5 hover:text-primary">
+                <Link href="/login">masuk bestie</Link>
               </Button>
-              <Button size="lg" asChild className="rounded-full bg-foreground text-background hover:bg-foreground/90 font-bold shadow-xl shadow-foreground/10 px-8">
-                <Link href="/signup">Get Access</Link>
+              <Button size="lg" asChild className="rounded-xl bg-accent text-accent-foreground hover:bg-accent/90 font-black shadow-xl shadow-accent/10 px-8 h-11 border border-accent/20 lowercase tracking-tight">
+                <Link href="/signup">join circle kita</Link>
               </Button>
             </>
           )}
@@ -92,49 +100,49 @@ export function Header() {
         {/* Mobile Menu Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="lg:hidden p-2 rounded-lg glass text-foreground"
+          className="lg:hidden p-2 rounded-xl glass text-foreground border border-border/50"
           aria-label="Toggle menu"
         >
-          {isOpen ? <X size={24} /> : <Menu size={24} />}
+          {isOpen ? <X size={20} /> : <Menu size={20} />}
         </button>
       </nav>
 
       {/* Mobile Navigation */}
       <div className={cn(
-        "absolute top-full left-0 w-full glass lg:hidden transition-all duration-300 overflow-hidden",
-        isOpen ? "max-h-screen opacity-100 py-8 px-6" : "max-h-0 opacity-0"
+        "absolute top-full left-0 w-full glass lg:hidden transition-all duration-300 overflow-hidden border-b border-border/50",
+        isOpen ? "max-h-screen opacity-100 py-10 px-6 shadow-2xl" : "max-h-0 opacity-0"
       )}>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-8">
           {['Tools', 'Assets', 'Blog', 'About'].map((item) => (
             <Link 
               key={item}
               href={`/${item.toLowerCase()}`} 
               onClick={() => setIsOpen(false)} 
-              className="text-2xl font-bold text-foreground hover:text-primary flex items-center justify-between"
+              className="text-4xl font-black text-foreground hover:text-primary flex items-center justify-between tracking-tighter italic uppercase"
             >
-              {item} <ChevronRight className="h-5 w-5" />
+              {item} <ChevronRight className="h-8 w-8 text-primary opacity-20" />
             </Link>
           ))}
           
-          <div className="flex flex-col gap-3 pt-6 border-t border-border/50">
+          <div className="flex flex-col gap-3 pt-8 border-t border-border/30">
             {isClient && user ? (
               <>
-                <Button size="lg" asChild className="w-full h-14 rounded-xl bg-primary text-primary-foreground font-bold">
+                <Button size="lg" asChild className="w-full h-16 rounded-2xl bg-primary text-primary-foreground font-bold text-xl">
                   <Link href={user.role === 'admin' ? '/admin' : '/dashboard'} onClick={() => setIsOpen(false)}>
-                    {user.role === 'admin' ? 'Admin Control Center' : 'User Dashboard'}
+                    {user.role === 'admin' ? 'Pusat Cuan' : 'Hub Bestie'}
                   </Link>
                 </Button>
-                <Button variant="ghost" size="lg" onClick={handleLogout} className="w-full h-14 rounded-xl text-foreground font-bold border border-border">
-                  <LogOut className="mr-2 h-5 w-5" /> Sign Out
+                <Button variant="ghost" size="lg" onClick={handleLogout} className="w-full h-16 rounded-2xl text-foreground font-bold border border-border/50">
+                  <LogOut className="mr-2 h-5 w-5" /> Exit Session
                 </Button>
               </>
             ) : (
               <>
-                <Button variant="outline" size="lg" asChild className="w-full h-14 rounded-xl border-border font-bold">
+                <Button variant="outline" size="lg" asChild className="w-full h-16 rounded-2xl border-border/50 font-bold text-xl">
                   <Link href="/login" onClick={() => setIsOpen(false)}>Sign In</Link>
                 </Button>
-                <Button size="lg" asChild className="w-full h-14 rounded-xl bg-foreground text-background font-bold shadow-xl shadow-foreground/10">
-                  <Link href="/signup" onClick={() => setIsOpen(false)}>Get Started</Link>
+                 <Button size="lg" asChild className="w-full h-16 rounded-2xl bg-accent text-accent-foreground font-black text-xl shadow-xl shadow-accent/20">
+                  <Link href="/signup" onClick={() => setIsOpen(false)}>Join Hub</Link>
                 </Button>
               </>
             )}

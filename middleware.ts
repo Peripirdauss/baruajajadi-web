@@ -25,13 +25,13 @@ export default async function middleware(req: NextRequest) {
 
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session) {
-    return NextResponse.redirect(new URL('/login', req.nextUrl))
+    return NextResponse.redirect(new URL('/perip/login', req.url))
   }
 
   // 5. Check role for admin routes
   if (path.startsWith('/admin') || path.startsWith('/api/admin')) {
     if (session?.user?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+      return NextResponse.redirect(new URL('/perip/dashboard', req.url))
     }
   }
 
@@ -42,7 +42,7 @@ export default async function middleware(req: NextRequest) {
     !path.startsWith('/admin') &&
     path !== '/'
   ) {
-    return NextResponse.redirect(new URL('/admin', req.nextUrl))
+    return NextResponse.redirect(new URL('/perip/admin', req.url))
   }
 
   return NextResponse.next()

@@ -22,8 +22,8 @@ export default function BlogPage() {
         {/* Hero Section */}
         <section className="border-b border-border px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl">
-            <h1 className="text-balance text-4xl font-bold text-foreground sm:text-5xl">
-              Blog & Insights
+            <h1 className="text-balance text-4xl font-extrabold text-foreground sm:text-5xl lowercase tracking-tighter">
+              cerita cuan & tips sakti ✨
             </h1>
             <p className="mt-4 text-lg text-foreground/60">
               Discover articles, guides, and stories about design, development, and digital innovation.

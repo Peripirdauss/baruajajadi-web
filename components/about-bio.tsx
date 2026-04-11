@@ -5,51 +5,45 @@ export function AboutBio() {
         <div className="grid gap-12 md:grid-cols-2 md:gap-16">
           {/* Bio Text */}
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold">My Story</h2>
-            <div className="space-y-4 text-foreground/70 leading-relaxed">
+            <h2 className="text-3xl font-black lowercase tracking-tight">kenapa kita ada?</h2>
+            <div className="space-y-4 text-foreground/70 leading-relaxed lowercase font-medium">
               <p>
-                I&apos;m a passionate digital creator dedicated to bridging the gap between design and technology. 
-                With over a decade of experience in the digital space, I&apos;ve developed a deep understanding 
-                of what makes products intuitive, beautiful, and impactful.
+                kita tau banget rasanya jadi pejuang online jaman sekarang. mau fokus bikin konten atau besarin brand, tapi malah habis waktu diurusin administrasi yang ribetnya minta ampun.
               </p>
               <p>
-                My journey began with a simple belief: great tools empower great creators. This philosophy 
-                has guided every project I&apos;ve undertaken, from designing interfaces to building comprehensive 
-                digital ecosystems that serve thousands of creators worldwide.
+                makanya baruajajadi dibikin. misi kita simpel: sediain semua "senjata" yang kamu butuhin—mulai dari kalkulator cuan, link affiliate otomatis, sampe template jualan—biar kerjaan kamu makin sat-set dan gak pake lama.
               </p>
               <p>
-                Today, I focus on creating resources, tools, and content that help designers and developers 
-                work smarter, build faster, and create with confidence. Whether it&apos;s through curated assets, 
-                innovative tools, or insightful content, I&apos;m committed to elevating the creative community.
+                kita pengen kamu bisa fokus ke hal yang paling penting: kembangin ide dan dapetin cuan maksimal. biar urusan admin yang membosankan kita yang beresin pake tools sakti kita.
               </p>
             </div>
           </div>
 
           {/* Values Grid */}
           <div className="space-y-6">
-            <h2 className="text-3xl font-bold">Core Values</h2>
+            <h2 className="text-3xl font-black lowercase tracking-tight">vibes kita</h2>
             <div className="space-y-4">
               {[
                 {
-                  title: 'Excellence',
-                  description: 'Delivering high-quality work in everything I create'
+                  title: 'sat-set',
+                  description: 'kerjaan beres cepet, nggak pake drama.'
                 },
                 {
-                  title: 'Community',
-                  description: 'Building resources that strengthen creative communities'
+                  title: 'temen cuan',
+                  description: 'kita ada buat bantu kamu makin untung.'
                 },
                 {
-                  title: 'Innovation',
-                  description: 'Constantly exploring new possibilities and ideas'
+                  title: 'anti-ribet',
+                  description: 'gak perlu teknis banget, semua orang bisa pake.'
                 },
                 {
-                  title: 'Authenticity',
-                  description: 'Sharing genuine insights and meaningful connections'
+                  title: 'pasti beres',
+                  description: 'kualitas yang beneran bantu jualan kamu.'
                 }
               ].map((value) => (
-                <div key={value.title} className="rounded-lg bg-card p-4 border border-border">
-                  <h3 className="font-semibold text-foreground">{value.title}</h3>
-                  <p className="text-sm text-foreground/60 mt-1">{value.description}</p>
+                <div key={value.title} className="rounded-2xl bg-card p-5 border border-border shadow-sm">
+                  <h3 className="font-black text-foreground lowercase">{value.title}</h3>
+                  <p className="text-sm text-foreground/60 mt-1 lowercase">{value.description}</p>
                 </div>
               ))}
             </div>

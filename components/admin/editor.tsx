@@ -41,6 +41,7 @@ export function BlogEditor({ content, onChange, placeholder }: BlogEditorProps) 
         placeholder: placeholder || 'Start writing your story...',
       }),
     ],
+    immediatelyRender: false,
     content: content,
     onUpdate: ({ editor }) => {
       onChange(editor.getHTML());

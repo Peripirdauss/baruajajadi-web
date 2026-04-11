@@ -14,6 +14,7 @@ import { Loader2, Save } from 'lucide-react'
 const heroSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   subtitle: z.string().min(1, 'Subtitle is required'),
+  image: z.string().optional(),
   cta_primary: z.string().min(1, 'Primary CTA is required'),
   cta_secondary: z.string().min(1, 'Secondary CTA is required'),
   stats: z.array(z.object({
@@ -36,7 +37,7 @@ export default function HeroEditor() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/api/content')
+        const response = await fetch('/perip/api/content')
         const data = await response.json()
         setFullData(data)
         reset(data.hero)
@@ -53,7 +54,7 @@ export default function HeroEditor() {
     setSaving(true)
     try {
       const updatedData = { ...fullData, hero: values }
-      const response = await fetch('/api/content', {
+      const response = await fetch('/perip/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)
@@ -111,6 +112,11 @@ export default function HeroEditor() {
                 <label className="text-sm font-medium">Secondary CTA</label>
                 <Input {...register('cta_secondary')} />
               </div>
+            </div>
+            <div className="space-y-2 pt-4">
+              <label className="text-sm font-medium">Hero Image URL (Optional)</label>
+              <Input {...register('image')} placeholder="https://images.unsplash.com/..." />
+              <p className="text-[10px] text-muted-foreground uppercase font-mono font-bold tracking-widest">Replacing this URL will override the abstract visual background.</p>
             </div>
           </CardContent>
         </Card>

@@ -1,20 +1,20 @@
 export function Skills() {
   const skillCategories = [
     {
-      category: 'Design',
-      skills: ['UI/UX Design', 'Figma', 'Design Systems', 'Branding', 'Prototyping', 'Illustration']
+      category: 'strategi cuan',
+      skills: ['KOL Marketing', 'Affiliate Specialist', 'Brand Growth', 'Optimasi Penjualan', 'Market Analytics']
     },
     {
-      category: 'Development',
-      skills: ['React', 'Next.js', 'TypeScript', 'Tailwind CSS', 'Node.js', 'Web APIs']
+      category: 'tools sakti',
+      skills: ['Automation', 'AI Copywriting', 'Auto-UTM Tracking', 'Margin Calculator', 'Lead Generation']
     },
     {
-      category: 'Tools & Platforms',
-      skills: ['Figma', 'Adobe Creative Suite', 'Git', 'Self-Hosting', 'Supabase', 'GraphQL']
+      category: 'aset kece',
+      skills: ['Branding Kits', 'Template Shopee/TikTok', 'Asset Management', 'Engagement Assets']
     },
     {
-      category: 'Content & Strategy',
-      skills: ['Technical Writing', 'Content Strategy', 'SEO', 'Community Building', 'Analytics']
+      category: 'support bestie',
+      skills: ['Priority Access', 'Community Insights', 'Weekly Tips', 'Sat-set Service']
     }
   ];
 
@@ -23,9 +23,9 @@ export function Skills() {
       <div className="mx-auto max-w-4xl">
         <div className="space-y-12">
           <div>
-            <h2 className="text-3xl font-bold mb-4">Skills & Expertise</h2>
-            <p className="text-foreground/60 text-lg">
-              A comprehensive toolkit developed through years of practice and continuous learning
+            <h2 className="text-3xl font-black mb-4 lowercase tracking-tight">senjata kita buat bantu kamu 🔥</h2>
+            <p className="text-foreground/60 text-lg lowercase">
+              kumpulan strategi & tools yang udah kita asah buat pastiin bisnis kamu makin gacor dan sat-set.
             </p>
           </div>
 

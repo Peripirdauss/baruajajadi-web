@@ -30,35 +30,36 @@ export async function POST(request: Request) {
 
     const data = await request.json()
     
-    // Ensure table exists
-    await db.execute(sql`
-      CREATE TABLE IF NOT EXISTS site_config (
-        id VARCHAR(255) PRIMARY KEY,
-        data LONGTEXT,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-      )
-    `);
-
-    // Upsert the data
-    const existing = await db.select().from(siteConfig).where(eq(siteConfig.id, 'global'));
-    
-    if (existing.length === 0) {
-      await db.insert(siteConfig).values({
-        id: 'global',
-        data: JSON.stringify(data)
-      });
-    } else {
-      await db.update(siteConfig)
-        .set({ data: JSON.stringify(data) })
-        .where(eq(siteConfig.id, 'global'));
-    }
-    
-    // Also save to file as backup if possible
+    // Try database operations
     try {
-      await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8')
-    } catch(e) {
-      console.warn("Could not backup to JSON file, running solely on DB.")
+      // Ensure table exists
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS site_config (
+          id VARCHAR(255) PRIMARY KEY,
+          data LONGTEXT,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+      `);
+
+      // Upsert the data
+      const existing = await db.select().from(siteConfig).where(eq(siteConfig.id, 'global'));
+      
+      if (existing.length === 0) {
+        await db.insert(siteConfig).values({
+          id: 'global',
+          data: JSON.stringify(data)
+        });
+      } else {
+        await db.update(siteConfig)
+          .set({ data: JSON.stringify(data) })
+          .where(eq(siteConfig.id, 'global'));
+      }
+    } catch (dbError) {
+      console.warn("Database unavailable, falling back to file-only storage:", dbError);
     }
+    
+    // Always save to file as backup/primary storage
+    await fs.writeFile(DATA_FILE, JSON.stringify(data, null, 2), 'utf8');
     
     // Purge the cache for the home page and other relevant routes
     revalidatePath('/')

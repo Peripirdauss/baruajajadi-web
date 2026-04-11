@@ -7,7 +7,7 @@ import { ToolsSearch } from '@/components/tools-search'
 import { ToolsFilters } from '@/components/tools-filters'
 import { ToolsGrid } from '@/components/tools-grid'
 
-const TOOL_CATEGORIES = ['All', 'Figma', 'JSON Tools', 'AI Tools', 'Design', 'Productivity']
+const TOOL_CATEGORIES = ['All', 'KOL Specialist', 'Affiliate Specialist', 'Brand Owner', 'E-Commerce Specialist', 'Operations', 'Analytics']
 
 export default function ToolsPage() {
   const [searchQuery, setSearchQuery] = useState('')
@@ -21,8 +21,8 @@ export default function ToolsPage() {
       <section className="border-b border-border bg-card py-12 md:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-balance text-4xl font-bold md:text-5xl">
-              Powerful Tools for Creators
+            <h1 className="text-balance text-4xl font-extrabold md:text-5xl lowercase tracking-tighter">
+              koleksi tools sakti pilihan ✨
             </h1>
             <p className="mt-4 text-lg text-muted-foreground">
               Explore our curated collection of productivity and design tools

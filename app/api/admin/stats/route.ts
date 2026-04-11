@@ -15,8 +15,20 @@ export async function GET() {
     }
 
     // 1. Get User Count
-    const userResult = await db.select({ count: count() }).from(users);
-    const userCount = userResult[0]?.count || 0;
+    let userCount = 0;
+    try {
+      const userResult = await db.select({ count: count() }).from(users);
+      userCount = userResult[0]?.count || 0;
+    } catch (dbErr) {
+      console.warn("DB unavailable for stats, checking users.json...");
+      try {
+        const usersFile = path.join(process.cwd(), 'data', 'users.json');
+        const fileContent = await require('fs').promises.readFile(usersFile, 'utf8');
+        userCount = JSON.parse(fileContent).length;
+      } catch (fErr) {
+        userCount = 0;
+      }
+    }
 
     // 2. Get Site Content Counts
     const content = await getGlobalContent();

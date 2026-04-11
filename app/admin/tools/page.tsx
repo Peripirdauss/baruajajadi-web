@@ -41,7 +41,7 @@ export default function ToolsManager() {
 
   async function fetchData() {
     try {
-      const response = await fetch('/api/content')
+      const response = await fetch('/perip/api/content')
       const data = await response.json()
       setFullData(data)
       setTools(data.tools || [])
@@ -56,7 +56,7 @@ export default function ToolsManager() {
     setSaving(true)
     try {
       const updatedData = { ...fullData, tools: newTools }
-      const response = await fetch('/api/content', {
+      const response = await fetch('/perip/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)

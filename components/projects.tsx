@@ -3,45 +3,24 @@ import { ExternalLink } from 'lucide-react';
 export function Projects() {
   const projects = [
     {
-      title: 'Design System Pro',
-      description: 'A comprehensive design system with 200+ components, tokens, and documentation for scaling design across teams',
-      tags: ['Design Systems', 'Figma', 'Documentation'],
-      impact: '10K+ downloads',
+      title: 'Success Brand A',
+      description: 'Bantu brand skincare scale up lewat optimasi KOL dan link affiliate sakti.',
+      tags: ['KOL Strat', 'Cuan Up', 'Sales'],
+      impact: 'naik 300% sales',
       link: '#'
     },
     {
-      title: 'Creative Tools Hub',
-      description: 'Curated collection of 500+ design and development tools with detailed reviews and use cases',
-      tags: ['Tools', 'Curation', 'Community'],
-      impact: '50K+ users',
+      title: 'Affiliate Master Project',
+      description: 'Otomasi link buat 100+ affiliate leader biar komisi makin lancar jaya.',
+      tags: ['Automation', 'Sat-set', 'Income'],
+      impact: '10K+ clicks/mo',
       link: '#'
     },
     {
-      title: 'UI Component Library',
-      description: 'Open-source React component library built with TypeScript and Tailwind CSS, extensively documented',
-      tags: ['React', 'Open Source', 'Components'],
-      impact: '5K+ GitHub stars',
-      link: '#'
-    },
-    {
-      title: 'Design & Dev Academy',
-      description: 'Online learning platform with 100+ courses teaching design thinking, UI/UX, and modern web development',
-      tags: ['Education', 'Content', 'Community'],
-      impact: '50K+ students',
-      link: '#'
-    },
-    {
-      title: 'Asset Marketplace',
-      description: 'Digital marketplace for selling and distributing design assets, templates, and resources',
-      tags: ['E-Commerce', 'Design', 'Marketplace'],
-      impact: '$100K+ revenue',
-      link: '#'
-    },
-    {
-      title: 'Design Insights Blog',
-      description: 'Weekly published articles covering design trends, development tips, and industry insights with 100K+ monthly readers',
-      tags: ['Content', 'Blog', 'Thought Leadership'],
-      impact: '100K+ monthly readers',
+      title: 'TikTok Shop Domination',
+      description: 'Berhasil bikin 500+ deskripsi produk auto-laris pake AI dalam seminggu.',
+      tags: ['AI Content', 'Fast', 'Result'],
+      impact: '500+ produk live',
       link: '#'
     }
   ];
@@ -51,9 +30,9 @@ export function Projects() {
       <div className="mx-auto max-w-4xl">
         <div className="space-y-12">
           <div>
-            <h2 className="text-3xl font-bold mb-4">Notable Projects</h2>
-            <p className="text-foreground/60 text-lg">
-              A selection of projects that showcase my passion for creating impactful digital experiences
+            <h2 className="text-3xl font-black mb-4 lowercase tracking-tight">brand yang udah gaskeun 🚀</h2>
+            <p className="text-foreground/60 text-lg lowercase">
+              cerita sukses dari mereka yang udah pakai tools kita buat scale up bisnisnya.
             </p>
           </div>
 

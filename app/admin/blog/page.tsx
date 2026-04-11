@@ -58,7 +58,7 @@ export default function AdminBlogPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch('/api/content');
+      const res = await fetch('/perip/api/content');
       const data = await res.json();
       setFullData(data);
       setPosts(data.blog || []);
@@ -82,7 +82,7 @@ export default function AdminBlogPage() {
     const updatedData = { ...fullData, blog: newPosts };
 
     try {
-      const res = await fetch('/api/content', {
+      const res = await fetch('/perip/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),
@@ -107,7 +107,7 @@ export default function AdminBlogPage() {
     const updatedData = { ...fullData, blog: newPosts };
 
     try {
-      const res = await fetch('/api/content', {
+      const res = await fetch('/perip/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),
@@ -160,7 +160,7 @@ export default function AdminBlogPage() {
               <Plus className="mr-2 h-4 w-4" /> Add New Post
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-w-[95vw] lg:max-w-6xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingPost ? 'Edit Post' : 'Add New Blog Post'}</DialogTitle>
             </DialogHeader>

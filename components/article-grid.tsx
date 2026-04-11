@@ -28,7 +28,7 @@ export function ArticleGrid({ searchQuery, selectedCategory }: ArticleGridProps)
   useEffect(() => {
     async function fetchArticles() {
       try {
-        const res = await fetch('/api/content');
+        const res = await fetch('/perip/api/content');
         const data = await res.json();
         setArticles(data.blog || []);
       } catch (e) {

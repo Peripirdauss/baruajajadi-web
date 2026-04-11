@@ -9,6 +9,7 @@ interface ToolCardProps {
   icon: string
   url: string
   features: string[]
+  pricing?: 'free' | 'pro'
 }
 
 export function ToolCard({
@@ -20,6 +21,7 @@ export function ToolCard({
   icon,
   url,
   features,
+  pricing = 'free',
 }: ToolCardProps) {
   return (
     <a
@@ -29,7 +31,15 @@ export function ToolCard({
       className="group flex flex-col rounded-lg border border-border bg-card p-6 transition-all hover:border-primary hover:shadow-lg dark:hover:shadow-primary/20"
     >
       <div className="flex items-start justify-between">
-        <div className="text-4xl">{icon}</div>
+        <div className="flex items-center gap-3">
+          <div className="text-4xl">{icon}</div>
+          {pricing === 'pro' && (
+            <span className="rounded-md bg-accent px-2 py-0.5 text-[10px] font-bold text-accent-foreground shadow-sm">PRO</span>
+          )}
+          {pricing === 'free' && (
+            <span className="rounded-md bg-emerald-500 px-2 py-0.5 text-[10px] font-bold text-white shadow-sm">FREE</span>
+          )}
+        </div>
         <ExternalLink className="h-5 w-5 opacity-0 transition-opacity group-hover:opacity-100" />
       </div>
 

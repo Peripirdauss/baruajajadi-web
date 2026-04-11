@@ -15,70 +15,72 @@ const data = [
 
 export function OverviewChart() {
   return (
-    <Card className="col-span-1 md:col-span-2 lg:col-span-3 border-border/50 bg-card/40 backdrop-blur-md">
-      <CardHeader className="flex flex-row items-center justify-between pb-8">
-        <div className="space-y-1">
-          <CardTitle className="text-xl font-bold tracking-tight">Activity Overview</CardTitle>
-          <CardDescription>Visualizing traffic and engagement patterns across your platform.</CardDescription>
+    <Card className="col-span-1 md:col-span-2 lg:col-span-3 border-none bg-transparent shadow-none font-outfit">
+      <CardHeader className="flex flex-row items-center justify-between pb-12 pt-8 px-10">
+        <div className="space-y-2">
+          <CardTitle className="text-2xl font-bold tracking-tight lowercase">aktivitas cuan ✨</CardTitle>
+          <CardDescription className="text-sm font-medium lowercase">pantau traffic cuan yang masuk ke website kamu.</CardDescription>
         </div>
-        <div className="flex items-center gap-4 text-xs font-semibold">
-          <div className="flex items-center gap-1.5">
-            <div className="h-2 w-2 rounded-full bg-accent"></div>
-            <span>Platform Traffic</span>
+        <div className="flex items-center gap-6 text-[10px] font-bold lowercase tracking-widest">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-primary shadow-[0_0_10px_rgba(29,78,216,0.4)]"></div>
+            <span>pengunjung total</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <div className="h-2 w-2 rounded-full bg-accent/30"></div>
-            <span>Active Sessions</span>
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-primary/20"></div>
+            <span>pengunjung aktif</span>
           </div>
         </div>
       </CardHeader>
-      <CardContent className="h-[350px] w-full pl-2">
+      <CardContent className="h-[400px] w-full pl-6 pr-10">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
               <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.3} />
-                <stop offset="95%" stopColor="var(--accent)" stopOpacity={0} />
+                <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.15} />
+                <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0} />
               </linearGradient>
               <linearGradient id="colorActive" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="var(--accent)" stopOpacity={0.1} />
-                <stop offset="95%" stopColor="var(--accent)" stopOpacity={0} />
+                <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.05} />
+                <stop offset="95%" stopColor="#1d4ed8" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" opacity={0.5} />
+            <CartesianGrid strokeDasharray="6 6" vertical={false} stroke="rgba(0,0,0,0.05)" />
             <XAxis 
               dataKey="name" 
-              stroke="var(--muted-foreground)" 
-              fontSize={12} 
+              stroke="#94a3b8" 
+              fontSize={10} 
+              fontWeight={700}
               tickLine={false} 
               axisLine={false} 
-              dy={10}
+              dy={15}
+              tickFormatter={(value) => value.toLowerCase()}
             />
             <YAxis 
-              stroke="var(--muted-foreground)" 
-              fontSize={12} 
+              stroke="#94a3b8" 
+              fontSize={10} 
+              fontWeight={700}
               tickLine={false} 
               axisLine={false} 
-              tickFormatter={(value) => `${value}`}
-              dx={-10}
+              dx={-15}
             />
             <Tooltip 
               content={({ active, payload }) => {
                 if (active && payload && payload.length) {
                   return (
-                    <div className="rounded-lg border border-border bg-background/95 p-3 shadow-xl backdrop-blur-sm">
-                      <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between gap-4">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{payload[0].payload.name}</span>
+                    <div className="rounded-2xl border border-white bg-white/90 p-5 shadow-2xl backdrop-blur-xl border-border/20">
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-center justify-between gap-6">
+                          <span className="text-[10px] font-bold lowercase tracking-widest text-muted-foreground/40">catatan {payload[0].payload.name}</span>
                         </div>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-accent" />
-                            <span className="text-sm font-bold text-foreground">Traffic: {payload[0].value}</span>
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-3">
+                            <div className="h-2 w-2 rounded-full bg-primary" />
+                            <span className="text-sm font-bold text-foreground lowercase px-2">total: {payload[0].value}</span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <div className="h-2 w-2 rounded-full bg-accent/30" />
-                            <span className="text-sm font-medium text-muted-foreground">Active: {payload[1].value}</span>
+                          <div className="flex items-center gap-3">
+                            <div className="h-2 w-2 rounded-full bg-primary/20" />
+                            <span className="text-sm font-medium text-muted-foreground lowercase px-2">aktif: {payload[1].value}</span>
                           </div>
                         </div>
                       </div>
@@ -91,21 +93,23 @@ export function OverviewChart() {
             <Area
               type="monotone"
               dataKey="total"
-              stroke="var(--accent)"
-              strokeWidth={3}
+              stroke="#1d4ed8"
+              strokeWidth={4}
               fillOpacity={1}
               fill="url(#colorTotal)"
-              animationDuration={2000}
+              animationDuration={2500}
+              strokeLinecap="round"
             />
             <Area
               type="monotone"
               dataKey="active"
-              stroke="var(--accent)"
+              stroke="#1d4ed8"
               strokeWidth={2}
-              strokeDasharray="5 5"
+              strokeDasharray="8 8"
               fillOpacity={1}
               fill="url(#colorActive)"
-              animationDuration={2500}
+              animationDuration={3000}
+              strokeLinecap="round"
             />
           </AreaChart>
         </ResponsiveContainer>
