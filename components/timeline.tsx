@@ -3,32 +3,32 @@ export function Timeline() {
     {
       year: '2024',
       title: 'Launched BaruAjaJadi',
-      description: 'Created a comprehensive hub for tools, assets, and insights serving the creative community'
+      description: 'A hub for tools, assets, and creative resources.'
     },
     {
       year: '2023',
-      title: 'Reached 50K Community Members',
-      description: 'Grew audience across platforms while maintaining focus on quality content and resources'
+      title: 'Reached 50K Members',
+      description: 'Grew a thriving community across platforms.'
     },
     {
       year: '2022',
       title: 'Open-Sourced Component Library',
-      description: 'Released React component library with 5K+ GitHub stars and active community contributions'
+      description: '5K+ GitHub stars and active contributions.'
     },
     {
       year: '2021',
       title: 'Founded Design Academy',
-      description: 'Launched online learning platform with 100+ courses educating 50K+ students globally'
+      description: '100+ courses, 50K+ students worldwide.'
     },
     {
       year: '2020',
       title: 'Started Digital Publishing',
-      description: 'Began publishing design and development insights reaching 100K+ monthly readers'
+      description: '100K+ monthly readers and growing.'
     },
     {
       year: '2018',
       title: 'Full-Time Creator',
-      description: 'Transitioned to building products and content as primary focus'
+      description: 'Went all-in on building products and content.'
     }
   ];
 
@@ -39,7 +39,7 @@ export function Timeline() {
           <div>
             <h2 className="text-3xl font-bold mb-4">Journey & Milestones</h2>
             <p className="text-foreground/60 text-lg">
-              Key moments in my creative journey and growth as a digital creator
+              Key moments in my creative journey.
             </p>
           </div>
 

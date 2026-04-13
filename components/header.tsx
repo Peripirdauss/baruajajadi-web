@@ -35,7 +35,7 @@ export function Header() {
   }, [])
 
   return (
-    <header className="sticky top-0 z-50 glass border-b border-border/40 transition-all duration-300">
+    <header className="sticky top-0 z-50 bg-background border-b border-border transition-all duration-300">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-3 sm:px-8 lg:px-10">
         <Link href="/" className="group">
           <div className="flex items-center gap-3">
@@ -68,6 +68,16 @@ export function Header() {
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full opacity-50"></span>
             </Link>
           ))}
+          <Link
+            href="https://baruajajadi.space"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-bold text-accent transition-all hover:text-accent/80 relative group lowercase tracking-tight flex items-center gap-1"
+          >
+            komunitas
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
+            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-accent transition-all group-hover:w-full opacity-50"></span>
+          </Link>
         </div>
 
         {/* Desktop Auth Section */}
@@ -109,7 +119,7 @@ export function Header() {
 
       {/* Mobile Navigation */}
       <div className={cn(
-        "absolute top-full left-0 w-full glass lg:hidden transition-all duration-300 overflow-hidden border-b border-border/50",
+        "absolute top-full left-0 w-full bg-background lg:hidden transition-all duration-300 overflow-hidden border-b border-border",
         isOpen ? "max-h-screen opacity-100 py-10 px-6 shadow-2xl" : "max-h-0 opacity-0"
       )}>
         <div className="flex flex-col gap-8">
@@ -123,6 +133,15 @@ export function Header() {
               {item} <ChevronRight className="h-8 w-8 text-primary opacity-20" />
             </Link>
           ))}
+          <Link
+            href="https://baruajajadi.space"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => setIsOpen(false)}
+            className="text-4xl font-black text-accent hover:text-accent/80 flex items-center justify-between tracking-tighter italic uppercase"
+          >
+            KOMUNITAS <ChevronRight className="h-8 w-8 text-accent opacity-40" />
+          </Link>
           
           <div className="flex flex-col gap-3 pt-8 border-t border-border/30">
             {isClient && user ? (

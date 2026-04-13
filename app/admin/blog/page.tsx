@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, Trash2, Save, X, FileText } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, FileText, Star } from 'lucide-react';
 import { BlogEditor } from '@/components/admin/editor';
 import { useToast } from '@/hooks/use-toast';
 
@@ -26,6 +26,7 @@ interface Post {
   views: number;
   likes: number;
   publishedAt: string;
+  featured?: boolean;
 }
 
 export default function AdminBlogPage() {
@@ -49,7 +50,8 @@ export default function AdminBlogPage() {
     tags: [],
     views: 0,
     likes: 0,
-    publishedAt: new Date().toISOString().split('T')[0]
+    publishedAt: new Date().toISOString().split('T')[0],
+    featured: false
   });
 
   useEffect(() => {
@@ -75,9 +77,16 @@ export default function AdminBlogPage() {
       publishedAt: formData.publishedAt || new Date().toISOString().split('T')[0]
     };
 
-    const newPosts = editingPost
+    // If this post is being set as featured, unset featured on all others
+    let newPosts = editingPost
       ? posts.map((p) => (p.slug === editingPost.slug ? postToSave : p))
       : [...posts, postToSave];
+
+    if (postToSave.featured) {
+      newPosts = newPosts.map((p) =>
+        p.slug === postToSave.slug ? p : { ...p, featured: false }
+      );
+    }
 
     const updatedData = { ...fullData, blog: newPosts };
 
@@ -137,7 +146,8 @@ export default function AdminBlogPage() {
       tags: [],
       views: 0,
       likes: 0,
-      publishedAt: new Date().toISOString().split('T')[0]
+      publishedAt: new Date().toISOString().split('T')[0],
+      featured: false
     });
     setEditingPost(null);
   };
@@ -247,6 +257,27 @@ export default function AdminBlogPage() {
                   onChange={(e) => setFormData({...formData, image: e.target.value})} 
                 />
               </div>
+              <div className="flex items-center justify-between rounded-lg border border-border p-4">
+                <div>
+                  <Label className="flex items-center gap-2 text-sm font-semibold">
+                    <Star className="h-4 w-4 text-accent" />
+                    Set as Featured Article
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    This article will appear in the featured spotlight on the blog page.
+                    Only one article can be featured at a time.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setFormData({...formData, featured: !formData.featured})}
+                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${formData.featured ? 'bg-accent' : 'bg-muted'}`}
+                >
+                  <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${formData.featured ? 'translate-x-6' : 'translate-x-1'}`}
+                  />
+                </button>
+              </div>
               <div className="space-y-4 pt-4">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="content" className="text-lg font-black tracking-tight flex items-center gap-2">
@@ -285,6 +316,7 @@ export default function AdminBlogPage() {
                 <TableHead>Author</TableHead>
                 <TableHead>Category</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead>Featured</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -295,6 +327,15 @@ export default function AdminBlogPage() {
                   <TableCell>{post.author}</TableCell>
                   <TableCell>{post.category}</TableCell>
                   <TableCell>{post.date}</TableCell>
+                  <TableCell>
+                    {post.featured ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 px-2 py-0.5 text-xs font-semibold text-accent">
+                        <Star className="h-3 w-3 fill-current" /> Featured
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">—</span>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" onClick={() => {

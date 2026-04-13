@@ -40,19 +40,13 @@ export default function BlogPage() {
 
         {/* Search and Filters */}
         <section className="border-b border-border px-4 py-8 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-4xl">
-            <div className="grid gap-6 lg:grid-cols-4">
-              <div className="lg:col-span-3">
-                <BlogSearch query={searchQuery} onQueryChange={setSearchQuery} />
-              </div>
-              <div className="lg:col-span-1">
-                <BlogFilters 
-                  categories={BLOG_CATEGORIES}
-                  selectedCategory={selectedCategory}
-                  onCategoryChange={setSelectedCategory}
-                />
-              </div>
-            </div>
+          <div className="mx-auto max-w-4xl space-y-4">
+            <BlogFilters 
+              categories={BLOG_CATEGORIES}
+              selectedCategory={selectedCategory}
+              onCategoryChange={setSelectedCategory}
+            />
+            <BlogSearch query={searchQuery} onQueryChange={setSearchQuery} />
           </div>
         </section>
 

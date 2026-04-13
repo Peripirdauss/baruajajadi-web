@@ -8,20 +8,18 @@ interface BlogFiltersProps {
 
 export function BlogFilters({ categories, selectedCategory, onCategoryChange }: BlogFiltersProps) {
   return (
-    <div className="flex flex-col gap-4">
-      <h3 className="font-semibold text-foreground">Categories</h3>
-      <div className="flex flex-col gap-2">
-        {categories.map((category) => (
-          <Button
-            key={category}
-            variant={selectedCategory === category ? 'default' : 'outline'}
-            onClick={() => onCategoryChange(category)}
-            className="justify-start"
-          >
-            {category}
-          </Button>
-        ))}
-      </div>
+    <div className="flex flex-wrap gap-2">
+      {categories.map((category) => (
+        <Button
+          key={category}
+          variant={selectedCategory === category ? 'default' : 'outline'}
+          onClick={() => onCategoryChange(category)}
+          size="sm"
+          className="rounded-full"
+        >
+          {category}
+        </Button>
+      ))}
     </div>
   );
 }
