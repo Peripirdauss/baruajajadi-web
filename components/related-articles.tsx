@@ -1,3 +1,6 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Calendar, Clock } from 'lucide-react';
@@ -6,81 +9,75 @@ interface RelatedArticlesProps {
   relatedSlugs: string[];
 }
 
-// Mock related articles data
-const relatedArticlesData: Record<string, any> = {
-  'mastering-figma-prototyping': {
-    title: 'Mastering Figma Prototyping',
-    excerpt: 'Advanced techniques for creating interactive prototypes in Figma that impress stakeholders.',
-    image: 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=400&h=200&fit=crop',
-    publishedAt: '2024-03-10',
-    readTime: '10 min read',
-    category: 'Design',
-  },
-  'color-theory-in-web-design': {
-    title: 'Color Theory in Web Design',
-    excerpt: 'Understanding color psychology and how to apply it effectively to your digital products.',
-    image: 'https://images.unsplash.com/photo-1550258987-190a2d41a8ba?w=400&h=200&fit=crop',
-    publishedAt: '2024-03-05',
-    readTime: '7 min read',
-    category: 'Design',
-  },
-};
-
 export default function RelatedArticles({ relatedSlugs }: RelatedArticlesProps) {
-  const articles = relatedSlugs
-    .map((slug) => relatedArticlesData[slug])
-    .filter(Boolean);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  if (articles.length === 0) {
+  useEffect(() => {
+    async function fetchRelated() {
+      try {
+        const res = await fetch('/api/content');
+        const data = await res.json();
+        
+        // Filter articles by the slugs provided in props
+        const filtered = data.blog.filter((a: any) => 
+          relatedSlugs.includes(a.slug)
+        );
+
+        setArticles(filtered);
+      } catch (e) {
+        console.error("Error fetching related articles:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchRelated();
+  }, [relatedSlugs]);
+
+  if (loading || articles.length === 0) {
     return null;
   }
 
   return (
-    <div>
-      <h3 className="mb-8 text-2xl font-bold text-foreground">Related Articles</h3>
-      <div className="grid gap-6 md:grid-cols-2">
-        {articles.map((article, index) => (
+    <div className="mt-16 pt-16 border-t border-border/50">
+      <h3 className="mb-12 text-3xl font-black text-foreground uppercase italic tracking-tighter">Related <span className="text-primary">Artifacts</span> 📂</h3>
+      <div className="grid gap-8 md:grid-cols-2">
+        {articles.map((article) => (
           <Link
-            key={index}
-            href={`/blog/${Object.keys(relatedArticlesData).find(
-              (key) => relatedArticlesData[key].title === article.title
-            )}`}
-            className="group overflow-hidden rounded-lg border border-border transition-all hover:border-accent hover:shadow-md"
+            key={article.slug}
+            href={`/blog/${article.slug}`}
+            className="group block rounded-[2.5rem] border border-border bg-card p-6 transition-all hover:border-primary/30 hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.05)] overflow-hidden relative"
           >
-            <div className="space-y-4 p-6">
-              <div className="overflow-hidden rounded-lg">
-                <Image
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/[0.01] to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            
+            <div className="relative space-y-6">
+              <div className="aspect-[16/9] overflow-hidden rounded-[1.5rem] bg-slate-50 border border-border group-hover:border-primary/20 transition-all">
+                <img
                   src={article.image}
                   alt={article.title}
-                  width={400}
-                  height={200}
-                  className="h-40 w-full object-cover transition-transform group-hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
               </div>
 
-              <div className="space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="inline-block text-xs font-medium text-accent uppercase">
+              <div className="space-y-4 px-2">
+                <div className="flex items-center gap-3">
+                  <span className="inline-block text-[10px] font-black text-primary uppercase tracking-[0.2em]">
                     {article.category}
                   </span>
+                  <div className="h-px flex-1 bg-border/40"></div>
                 </div>
 
-                <h4 className="font-semibold text-foreground group-hover:text-accent transition-colors">
+                <h4 className="text-xl font-black text-foreground group-hover:text-primary transition-colors tracking-tight uppercase italic leading-tight">
                   {article.title}
                 </h4>
 
-                <p className="text-sm text-foreground/60 line-clamp-2">{article.excerpt}</p>
-
-                <div className="flex gap-4 text-xs text-foreground/50 pt-2">
-                  <span className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {new Date(article.publishedAt).toLocaleDateString('en-US', {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
+                <div className="flex gap-6 text-[10px] font-black text-muted-foreground/40 uppercase tracking-widest pt-2">
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="h-3 w-3 text-primary" />
+                    {article.date}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="h-3 w-3 text-primary" />
                     {article.readTime}
                   </span>
                 </div>

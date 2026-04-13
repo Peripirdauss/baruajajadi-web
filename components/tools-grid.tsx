@@ -63,11 +63,8 @@ export function ToolsGrid({ searchQuery, selectedCategory }: ToolsGridProps) {
         <ToolCard 
           key={tool.id} 
           {...tool} 
-          icon={tool.icon === 'Users' ? '👥' : tool.icon === 'Link' ? '🔗' : tool.icon === 'TrendingUp' ? '📈' : tool.icon === 'Sparkles' ? '✨' : tool.icon === 'Zap' ? '⚡' : '🔍'}
-          rating={tool.rating || 4.8}
-          reviews={tool.reviews || Math.floor(Math.random() * 500) + 100}
-          features={tool.features || ['Biar kerja makin sat-set', 'Auto-cuan & anti-ribet', 'Solusi praktis buat kamu']}
           url={`/tools/${tool.slug}`}
+          icon={tool.icon === 'Users' ? '👥' : tool.icon === 'Link' ? '🔗' : tool.icon === 'TrendingUp' ? '📈' : tool.icon === 'Sparkles' ? '✨' : tool.icon === 'Zap' ? '⚡' : tool.icon || '🔍'}
         />
       ))}
     </div>

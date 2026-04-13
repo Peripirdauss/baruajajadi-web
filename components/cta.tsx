@@ -29,7 +29,7 @@ export function CTA() {
 
           {/* Benefits Grid */}
           <div className="flex flex-wrap justify-center gap-x-12 gap-y-6 text-[10px] font-black tracking-[0.3em] text-muted-foreground/40 uppercase">
-            {['Quantum Auth', 'Neural Assets', 'Sync Engine', 'Tier 1 Support'].map((item) => (
+            {['Analisis KOL', 'Affiliate Sync', 'Cek Profit', 'Asset Ready'].map((item) => (
               <div key={item} className="flex items-center gap-3 group">
                 <div className="h-2 w-2 rounded-full bg-primary/30 group-hover:bg-primary transition-colors"></div>
                 <span className="group-hover:text-foreground transition-colors">{item}</span>

@@ -4,11 +4,11 @@ interface ToolCardProps {
   name: string
   description: string
   category: string
-  rating: number
-  reviews: number
+  rating?: number
+  reviews?: number
   icon: string
   url: string
-  features: string[]
+  features?: string[]
   pricing?: 'free' | 'pro'
 }
 
@@ -17,7 +17,7 @@ export function ToolCard({
   description,
   category,
   rating,
-  reviews,
+  reviews = 0,
   icon,
   url,
   features,
@@ -53,34 +53,38 @@ export function ToolCard({
         </span>
       </div>
 
-      <div className="mt-4 flex items-center gap-1">
-        <div className="flex text-accent">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              className={`h-4 w-4 ${
-                i < Math.floor(rating) ? 'fill-current' : 'fill-muted stroke-muted'
-              }`}
-            />
-          ))}
+      {rating !== undefined && (
+        <div className="mt-4 flex items-center gap-1">
+          <div className="flex text-accent">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                className={`h-4 w-4 ${
+                  i < Math.floor(rating) ? 'fill-current' : 'fill-muted stroke-muted'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="ml-2 text-xs text-muted-foreground">
+            {rating} ({reviews} reviews)
+          </span>
         </div>
-        <span className="ml-2 text-xs text-muted-foreground">
-          {rating} ({reviews} reviews)
-        </span>
-      </div>
+      )}
 
-      <div className="mt-6 space-y-2 border-t border-border pt-4">
-        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-          Key Features
-        </p>
-        <ul className="space-y-1">
-          {features.map((feature, idx) => (
-            <li key={idx} className="text-xs text-muted-foreground">
-              • {feature}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {features && features.length > 0 && (
+        <div className="mt-6 space-y-2 border-t border-border pt-4">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            Key Features
+          </p>
+          <ul className="space-y-1">
+            {features.map((feature, idx) => (
+              <li key={idx} className="text-xs text-muted-foreground">
+                • {feature}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <button className="mt-6 w-full rounded-lg bg-primary py-2 font-medium text-primary-foreground transition-colors hover:opacity-90">
         Learn More

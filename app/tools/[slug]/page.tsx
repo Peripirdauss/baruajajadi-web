@@ -40,28 +40,7 @@ export default function ToolDetailPage({ params }: { params: Promise<{ slug: str
         const foundTool = data.tools.find((t: any) => t.slug === slug);
         
         if (foundTool) {
-          // Add default values for missing fields to maintain UI consistency
-          setTool({
-            ...foundTool,
-            rating: foundTool.rating || 4.5,
-            reviews: foundTool.reviews || 120,
-            website: foundTool.website || "https://example.com",
-            features: foundTool.features || [
-              "Advanced analytics and reporting",
-              "Real-time collaboration tools",
-              "Customizable workflows",
-              "Priority customer support"
-            ],
-            pricing: foundTool.pricing || [
-              { plan: "Starter", price: "Free", features: ["Basic features", "Community support"] },
-              { plan: "Pro", price: "$19/mo", features: ["All features", "Priority support"] }
-            ],
-            testimonials: foundTool.testimonials || [
-              { author: "John Doe", role: "Developer", company: "Tech Inc", quote: "This tool changed my life!" }
-            ],
-            description_full: foundTool.description_full || foundTool.description,
-            image: foundTool.image || "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=600&fit=crop"
-          });
+          setTool(foundTool);
         }
       } catch (e) {
         console.error("Error fetching tool:", e);
@@ -103,10 +82,15 @@ export default function ToolDetailPage({ params }: { params: Promise<{ slug: str
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        <ToolDetailsHeader tool={tool} />
-        <ToolFeatures features={tool.features || []} />
-        <ToolPricing pricing={tool.pricing || []} />
-        <ToolTestimonials testimonials={tool.testimonials || []} />
+        <ToolDetailsHeader tool={{
+          ...tool,
+          description_full: tool.description_full || tool.description,
+          rating: tool.rating || 4.8,
+          reviews: tool.reviews || 0
+        }} />
+        {tool.features && tool.features.length > 0 && <ToolFeatures features={tool.features} />}
+        {tool.pricing && tool.pricing.length > 0 && <ToolPricing pricing={tool.pricing} />}
+        {tool.testimonials && tool.testimonials.length > 0 && <ToolTestimonials testimonials={tool.testimonials} />}
         <RelatedTools currentToolId={tool.slug} />
       </main>
       <Footer />
