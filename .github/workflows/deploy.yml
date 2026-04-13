@@ -34,7 +34,7 @@ jobs:
       - name: Prepare Restart Token
         run: |
           mkdir -p tmp
-          touch tmp/restart.txt
+          date > tmp/restart.txt
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
