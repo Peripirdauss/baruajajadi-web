@@ -58,7 +58,7 @@ export default function AdminBlogPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch('/perip/api/content');
+      const res = await fetch('/api/content');
       const data = await res.json();
       setFullData(data);
       setPosts(data.blog || []);
@@ -82,7 +82,7 @@ export default function AdminBlogPage() {
     const updatedData = { ...fullData, blog: newPosts };
 
     try {
-      const res = await fetch('/perip/api/content', {
+      const res = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),
@@ -107,7 +107,7 @@ export default function AdminBlogPage() {
     const updatedData = { ...fullData, blog: newPosts };
 
     try {
-      const res = await fetch('/perip/api/content', {
+      const res = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),

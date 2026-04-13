@@ -35,7 +35,7 @@ export default function ToolDetailPage({ params }: { params: Promise<{ slug: str
   useEffect(() => {
     async function fetchTool() {
       try {
-        const res = await fetch('/perip/api/content');
+        const res = await fetch('/api/content');
         const data = await res.json();
         const foundTool = data.tools.find((t: any) => t.slug === slug);
         

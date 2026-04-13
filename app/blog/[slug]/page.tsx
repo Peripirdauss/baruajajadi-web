@@ -20,7 +20,7 @@ export default function ArticlePage({ params }: { params: Promise<{ slug: string
   useEffect(() => {
     async function fetchArticle() {
       try {
-        const response = await fetch('/perip/api/content');
+        const response = await fetch('/api/content');
         const data = await response.json();
         const found = data.blog.find((a: any) => a.slug === slug);
         if (found) {

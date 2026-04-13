@@ -36,7 +36,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('/perip/api/auth/signup', {
+      const res = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -83,7 +83,7 @@ export default function SignupPage() {
           <div className="flex items-center gap-4">
             <div className="h-14 w-14 relative overflow-hidden rounded-2xl bg-primary shadow-2xl shadow-primary/20 group-hover:scale-110 transition-all duration-500 flex items-center justify-center">
               <Image 
-                src="/perip/logo.png" 
+                src="/logo.png" 
                 alt="Logo" 
                 width={56}
                 height={56}

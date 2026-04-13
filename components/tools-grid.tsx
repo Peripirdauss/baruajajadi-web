@@ -15,7 +15,7 @@ export function ToolsGrid({ searchQuery, selectedCategory }: ToolsGridProps) {
   useEffect(() => {
     async function fetchTools() {
       try {
-        const res = await fetch('/perip/api/content')
+        const res = await fetch('/api/content')
         if (!res.ok) throw new Error('Failed to fetch')
         const data = await res.json()
         if (data && data.tools) {
@@ -67,7 +67,7 @@ export function ToolsGrid({ searchQuery, selectedCategory }: ToolsGridProps) {
           rating={tool.rating || 4.8}
           reviews={tool.reviews || Math.floor(Math.random() * 500) + 100}
           features={tool.features || ['Biar kerja makin sat-set', 'Auto-cuan & anti-ribet', 'Solusi praktis buat kamu']}
-          url={`/perip/tools/${tool.slug}`}
+          url={`/tools/${tool.slug}`}
         />
       ))}
     </div>

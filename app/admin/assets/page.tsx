@@ -50,7 +50,7 @@ export default function AdminAssetsPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch('/perip/api/content');
+      const res = await fetch('/api/content');
       const data = await res.json();
       setFullData(data);
       setAssets(data.assets || []);
@@ -72,7 +72,7 @@ export default function AdminAssetsPage() {
     const updatedData = { ...fullData, assets: newAssets };
 
     try {
-      const res = await fetch('/perip/api/content', {
+      const res = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),
@@ -97,7 +97,7 @@ export default function AdminAssetsPage() {
     const updatedData = { ...fullData, assets: newAssets };
 
     try {
-      const res = await fetch('/perip/api/content', {
+      const res = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),
@@ -127,7 +127,7 @@ export default function AdminAssetsPage() {
     const updatedData = { ...fullData, assetsHero: heroData };
 
     try {
-      const res = await fetch('/perip/api/content', {
+      const res = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData),

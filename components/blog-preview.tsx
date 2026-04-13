@@ -23,7 +23,7 @@ export function BlogPreview() {
   useEffect(() => {
     async function fetchPosts() {
       try {
-        const res = await fetch('/perip/api/content');
+        const res = await fetch('/api/content');
         const data = await res.json();
         setPosts(data.blog || []);
       } catch (e) {

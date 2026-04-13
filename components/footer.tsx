@@ -17,7 +17,7 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <div className="h-12 w-12 relative overflow-hidden rounded-2xl bg-primary shadow-xl shadow-primary/10 flex items-center justify-center">
                 <Image 
-                  src="/perip/logo.png" 
+                  src="/logo.png" 
                   alt="Logo" 
                   width={48}
                   height={48}

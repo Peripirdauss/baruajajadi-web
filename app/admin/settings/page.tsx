@@ -30,7 +30,7 @@ export default function SettingsEditor() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/perip/api/content')
+        const response = await fetch('/api/content')
         const data = await response.json()
         setFullData(data)
         
@@ -52,7 +52,7 @@ export default function SettingsEditor() {
     setSaving(true)
     try {
       const updatedData = { ...fullData, metadata: values }
-      const response = await fetch('/perip/api/content', {
+      const response = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)

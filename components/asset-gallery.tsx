@@ -20,7 +20,7 @@ export function AssetGallery() {
   useEffect(() => {
     async function fetchAssets() {
       try {
-        const res = await fetch('/perip/api/content')
+        const res = await fetch('/api/content')
         const data = await res.json()
         setAssets(data.assets || [])
       } catch (e) {

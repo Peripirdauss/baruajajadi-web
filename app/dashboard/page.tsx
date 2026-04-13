@@ -26,7 +26,7 @@ export default function UserDashboard() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/perip/api/content');
+      const res = await fetch('/api/content');
       if (!res.ok) throw new Error('Failed to fetch content');
       const data = await res.json();
       setContent({

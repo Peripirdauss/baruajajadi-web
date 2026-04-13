@@ -37,7 +37,7 @@ export default function HeroEditor() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch('/perip/api/content')
+        const response = await fetch('/api/content')
         const data = await response.json()
         setFullData(data)
         reset(data.hero)
@@ -54,7 +54,7 @@ export default function HeroEditor() {
     setSaving(true)
     try {
       const updatedData = { ...fullData, hero: values }
-      const response = await fetch('/perip/api/content', {
+      const response = await fetch('/api/content', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)

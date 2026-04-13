@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="flex items-center gap-4">
                 <div className="h-12 w-12 relative overflow-hidden rounded-2xl bg-primary group-hover:rotate-12 transition-all duration-500 shadow-2xl shadow-primary/20 flex items-center justify-center">
                   <Image 
-                    src="/perip/logo.png" 
+                    src="/logo.png" 
                     alt="Logo" 
                     width={48}
                     height={48}

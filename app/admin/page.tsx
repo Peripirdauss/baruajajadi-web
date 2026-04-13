@@ -16,7 +16,7 @@ export default function AdminDashboard() {
   const fetchStats = async () => {
     setLoading(true);
     try {
-      const res = await fetch('/perip/api/admin/stats');
+      const res = await fetch('/api/admin/stats');
       const data = await res.json();
       if (data.stats) {
         setStats(data.stats);

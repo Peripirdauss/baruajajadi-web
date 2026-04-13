@@ -16,7 +16,7 @@ export default function AssetHero() {
   useEffect(() => {
     async function fetchHero() {
       try {
-        const res = await fetch('/perip/api/content');
+        const res = await fetch('/api/content');
         const data = await res.json();
         if (data.assetsHero) {
           setHero(data.assetsHero);

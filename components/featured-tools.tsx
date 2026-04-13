@@ -50,7 +50,7 @@ export async function FeaturedTools() {
             return (
               <Link
                 key={tool.id}
-                href={`/perip/tools/${tool.slug}`}
+                href={`/tools/${tool.slug}`}
                 className="group relative rounded-[2.5rem] glass-card p-10 transition-all duration-700 hover:scale-[1.02] hover:shadow-[0_40px_80px_-15px_rgba(29,78,216,0.1)] border-white/80"
               >
                 {/* Hover Reveal Gradient */}
@@ -98,7 +98,7 @@ export async function FeaturedTools() {
         {/* View All Button */}
         <div className="mt-24 flex justify-center">
           <Button size="xl" variant="outline" asChild className="rounded-2xl h-16 sm:h-20 px-12 font-bold text-xs lowercase tracking-widest border-border bg-white hover:bg-primary hover:text-white hover:border-primary transition-all group shadow-xl shadow-black/5 active:scale-95">
-            <Link href="/perip/tools" className="flex items-center gap-3">
+            <Link href="/tools" className="flex items-center gap-3">
               cek semua tools <Icons.ArrowRight className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
             </Link>
           </Button>

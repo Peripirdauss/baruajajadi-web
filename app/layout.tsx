@@ -23,10 +23,10 @@ export async function generateMetadata(): Promise<Metadata> {
     icons: {
       icon: [
         {
-          url: '/perip/logo.png',
+          url: '/logo.png',
         },
       ],
-      apple: '/perip/logo.png',
+      apple: '/logo.png',
     },
   }
 }

@@ -16,7 +16,7 @@ export function Header() {
 
   const handleLogout = async () => {
     try {
-      await fetch('/perip/api/auth/logout', { method: 'POST' })
+      await fetch('/api/auth/logout', { method: 'POST' })
       localStorage.removeItem('user')
       setUser(null)
       router.push('/')
@@ -41,7 +41,7 @@ export function Header() {
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 relative overflow-hidden rounded-xl bg-primary shadow-lg shadow-primary/20 group-hover:scale-110 transition-all duration-300 flex items-center justify-center">
               <Image 
-                src="/perip/logo.png" 
+                src="/logo.png" 
                 alt="Logo" 
                 width={40}
                 height={40}
