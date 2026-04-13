@@ -12,19 +12,8 @@ export async function POST(request: Request) {
     const { email, password } = await request.json();
 
     // Auto-migrate users table if it doesn't exist on cPanel
-    try {
-      await db.execute(sql`
-        CREATE TABLE IF NOT EXISTS users (
-          id INT AUTO_INCREMENT PRIMARY KEY,
-          first_name VARCHAR(255) NOT NULL,
-          last_name VARCHAR(255) NOT NULL,
-          email VARCHAR(255) NOT NULL UNIQUE,
-          password TEXT NOT NULL,
-          role VARCHAR(50) NOT NULL DEFAULT 'user',
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        )
-      `);
+      await db.execute(sql`SELECT 1`); // Simple ping to test connection
+      console.log('Database connection verified.');
 
       // Sync users from JSON to Database (Upsert logic)
       console.log('Syncing users from users.json...');
@@ -57,8 +46,10 @@ export async function POST(request: Request) {
           });
         }
       }
-    } catch(dbErr) {
-      console.warn("DB setup for users failed:", dbErr);
+    } catch(dbErr: any) {
+      console.error("DB setup for users failed:", dbErr);
+      // Don't return yet, try to proceed with fallback if possible
+      // but log the actual error message
     }
 
     // Find user in MySQL
@@ -90,15 +81,28 @@ export async function POST(request: Request) {
 
     if (!user) {
       console.warn(`[Login Failed] User not found or invalid: ${email}`);
-      return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+      return NextResponse.json({ 
+        error: 'Account not found',
+        reason: 'USER_NOT_FOUND',
+        debug_email: email 
+      }, { status: 401 });
     }
 
     // Compare Password (skipped for plaintext fallback above)
     if (user.password && user.password !== password && user.password.startsWith('$2')) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+        return NextResponse.json({ 
+          error: 'Incorrect security key',
+          reason: 'PASSWORD_MISMATCH'
+        }, { status: 401 });
       }
+    } else if (user.password !== password) {
+      // Direct comparison for non-bcrypt fallback
+      return NextResponse.json({ 
+        error: 'Incorrect security key (Plain)',
+        reason: 'PASSWORD_MISMATCH_PLAIN'
+      }, { status: 401 });
     }
 
     // Login successful
