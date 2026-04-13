@@ -7,19 +7,20 @@ interface AssetCardProps {
   description: string;
   category: string;
   image: string;
-  downloads: number;
-  rating: number;
-  link: string;
+  downloads?: number;
+  rating?: number;
+  link?: string;
 }
 
 export default function AssetCard({
+  id,
   title,
   description,
   category,
   image,
-  downloads,
-  rating,
-  link,
+  downloads = 0,
+  rating = 5.0,
+  link = `/assets/${id}`,
 }: AssetCardProps) {
   return (
     <div className="group overflow-hidden rounded-lg border border-border bg-card transition-all hover:border-accent hover:shadow-lg">
