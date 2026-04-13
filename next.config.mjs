@@ -7,6 +7,7 @@ const nextConfig = {
     unoptimized: true,
   },
   output: 'standalone',
+  basePath: '/perip',
 }
 
 export default nextConfig
