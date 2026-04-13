@@ -46,7 +46,7 @@ jobs:
           port: 21
           local-dir: ./
           # Simplified deployment folder for cPanel:
-          server-dir: public_html/baruajajadi.com/
+          server-dir: public_html/baruajajadi.com/perip/
           # Exclude files that shouldn't be overridden or aren't needed
           exclude: |
             **/.git*
