@@ -2,9 +2,11 @@ import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-const secret = new TextEncoder().encode(
-  process.env.JWT_SECRET || 'fallback-secret-at-least-32-chars-long'
-)
+const jwtSecretValue = process.env.JWT_SECRET
+if (!jwtSecretValue) {
+  throw new Error('FATAL: JWT_SECRET environment variable is not set.')
+}
+const secret = new TextEncoder().encode(jwtSecretValue)
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)

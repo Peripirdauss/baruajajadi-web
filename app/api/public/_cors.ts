@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHash } from 'crypto';
+import { createHash, timingSafeEqual } from 'crypto';
 
 // Allowed origins and their corresponding API key env variable
 const ALLOWED_ORIGINS: Record<string, string> = {
@@ -71,7 +71,20 @@ export function validateApiKey(req: NextRequest): {
   const apiKey = req.headers.get('X-API-Key') || '';
   const expectedKey = ALLOWED_ORIGINS[origin];
 
-  if (!expectedKey || apiKey !== expectedKey) {
+  // Use timing-safe comparison to prevent timing attacks
+  let isValid = false;
+  try {
+    if (expectedKey && apiKey.length === expectedKey.length) {
+      isValid = timingSafeEqual(
+        Buffer.from(apiKey),
+        Buffer.from(expectedKey)
+      );
+    }
+  } catch {
+    isValid = false;
+  }
+
+  if (!isValid) {
     return {
       valid: false,
       response: NextResponse.json(

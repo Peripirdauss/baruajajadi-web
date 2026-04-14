@@ -35,7 +35,7 @@ export async function POST(request: Request) {
       lastName,
       email,
       password: hashedPassword,
-      role: email === 'admin@baruajajadi.com' ? 'admin' : 'user',
+      role: 'user', // Role is always 'user' on self-registration. Admin must be set manually.
     });
 
     console.log(`[Signup Success] Created user: ${email} (Insert ID: ${result.insertId})`);
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       user: { 
         email, 
         firstName, 
-        role: email === 'admin@baruajajadi.com' ? 'admin' : 'user' 
+        role: 'user'
       } 
     });
 

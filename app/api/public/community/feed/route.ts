@@ -73,7 +73,7 @@ export async function GET(req: NextRequest) {
   } catch (error: any) {
     console.error('[Public API /community/feed] Error:', error);
     return withCors(
-      NextResponse.json({ error: 'Failed to load feed', details: error.message }, { status: 500 }),
+      NextResponse.json({ error: 'Failed to load feed' }, { status: 500 }),
       origin
     );
   }

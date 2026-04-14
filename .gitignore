@@ -29,6 +29,7 @@ next.user-config.*
 # Database & Data
 *.db
 *.sqlite
+data/users.json
 
 # OS Files
 .DS_Store

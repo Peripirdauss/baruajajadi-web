@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
   } catch (error: any) {
     console.error('[Public API /community/user] Error:', error);
     return withCors(
-      NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 }),
+      NextResponse.json({ error: 'Internal Server Error' }, { status: 500 }),
       origin
     );
   }
