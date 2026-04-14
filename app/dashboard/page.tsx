@@ -137,11 +137,8 @@ export default function UserDashboard() {
       <main className="mx-auto max-w-7xl p-6 lg:p-12">
         <header className="mb-12 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 border-b border-border/40 pb-10">
           <div className="space-y-2" onClick={handleDebugClick}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-[10px] font-black text-accent uppercase tracking-widest mb-2">
-              <Terminal className="h-3 w-3" /> System Active // Session: Verified
-            </div>
             <h1 className="text-6xl font-black tracking-tighter text-foreground leading-none lowercase">
-              halo bestie, <span className="text-accent italic">@{user.firstName.toLowerCase()}</span> !
+              halo bestie, <span className="text-accent italic">{user.firstName}</span> !
             </h1>
             <p className="text-lg text-foreground/40 font-medium flex items-center gap-2 mt-4 ml-1">
               Gimana? Semangat jualan hari ini? Gaskeun!
@@ -174,11 +171,11 @@ export default function UserDashboard() {
                 </CardHeader>
                 <CardContent className="space-y-6 pt-10 px-8 pb-10">
                   <div className="space-y-2 p-5 rounded-[1.5rem] bg-accent/5 border border-accent/10">
-                    <span className="text-[10px] text-accent font-black uppercase tracking-[0.3em] block">Active Terminal</span>
+                    <span className="text-[10px] text-accent font-black uppercase tracking-[0.3em] block">ID LOGIN</span>
                     <p className="text-sm font-bold text-foreground overflow-hidden text-ellipsis">{user.email}</p>
                   </div>
                   <div className="space-y-2 p-5 rounded-[1.5rem] bg-accent/5 border border-accent/10">
-                    <span className="text-[10px] text-accent font-black uppercase tracking-[0.3em] block">Member Protocol</span>
+                    <span className="text-[10px] text-accent font-black uppercase tracking-[0.3em] block">MEMBER SEJAK</span>
                     <p className="text-sm font-bold text-foreground">
                       {user.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'April 2026'}
                     </p>
