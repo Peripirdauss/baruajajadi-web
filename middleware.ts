@@ -1,60 +1,33 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { decrypt } from '@/lib/auth'
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-// 1. Specify protected and public routes
-const protectedRoutes = ['/admin', '/api/admin']
-const publicRoutes = ['/login', '/signup', '/']
-// NOTE: /api/public/* is excluded from session auth — uses API key auth instead
+export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl;
 
-export default async function middleware(req: NextRequest) {
-  // 2. Check if the current route is protected or public
-  const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.some(route => path.startsWith(route))
-  const isPublicRoute = publicRoutes.includes(path)
-
-  // Skip session auth for public cross-domain API endpoints (they use API key auth)
-  if (path.startsWith('/api/public')) {
-    return NextResponse.next()
-  }
-
-  // 3. Decrypt the session from the cookie
-  const cookie = req.cookies.get('session')?.value
-  let session = null
-  
-  if (cookie) {
+  // 1. Analytics Tracking (exclude static assets and API routes)
+  if (!pathname.startsWith('/api') && !pathname.startsWith('/_next') && !pathname.includes('.')) {
+    // We fire and forget the analytics hit to keep it fast
+    // Since we are in a middleware, we can't easily wait for DB
+    // But we can trigger a tracking endpoint
     try {
-      session = await decrypt(cookie)
+      fetch(`${request.nextUrl.origin}/api/public/track`, { method: 'POST' });
     } catch (e) {
-      console.error('Session decryption failed', e)
+      // Ignore background fetch errors
     }
   }
 
-  // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session) {
-    return NextResponse.redirect(new URL('/login', req.url))
-  }
-
-  // 5. Check role for admin routes
-  if (path.startsWith('/admin') || path.startsWith('/api/admin')) {
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
-    }
-  }
-
-  // 6. Redirect to /admin if the user is authenticated and trying to access login
-  if (
-    isPublicRoute &&
-    session?.user?.role === 'admin' &&
-    !path.startsWith('/admin') &&
-    path !== '/'
-  ) {
-    return NextResponse.redirect(new URL('/admin', req.url))
-  }
-
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
-// Routes Middleware should not run on
 export const config = {
-  matcher: ['/((?!api/auth|api/public|_next/static|_next/image|.*\\.png$).*)'],
-}
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+  ],
+};

@@ -2,18 +2,36 @@
 
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-
-const data = [
-  { name: 'Mon', total: 400, active: 240 },
-  { name: 'Tue', total: 700, active: 450 },
-  { name: 'Wed', total: 600, active: 400 },
-  { name: 'Thu', total: 900, active: 560 },
-  { name: 'Fri', total: 1100, active: 800 },
-  { name: 'Sat', total: 1500, active: 1100 },
-  { name: 'Sun', total: 1300, active: 950 },
-];
+import { useEffect, useState } from 'react';
+import { Loader2 } from 'lucide-react';
 
 export function OverviewChart() {
+  const [chartData, setChartData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchChartData() {
+      try {
+        const res = await fetch('/api/admin/analytics');
+        const data = await res.json();
+        if (data.stats) setChartData(data.stats);
+      } catch (e) {
+        console.error('Failed to load chart data');
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchChartData();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="h-[400px] flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary/20" />
+      </div>
+    );
+  }
+
   return (
     <Card className="col-span-1 md:col-span-2 lg:col-span-3 border-none bg-transparent shadow-none font-outfit">
       <CardHeader className="flex flex-row items-center justify-between pb-12 pt-8 px-10">
@@ -34,7 +52,10 @@ export function OverviewChart() {
       </CardHeader>
       <CardContent className="h-[400px] w-full pl-6 pr-10">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data}>
+          <AreaChart data={chartData.length > 0 ? chartData : [
+            { name: '...', total: 0, active: 0 },
+            { name: '...', total: 0, active: 0 }
+          ]}>
             <defs>
               <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#1d4ed8" stopOpacity={0.15} />

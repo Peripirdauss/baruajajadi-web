@@ -15,42 +15,25 @@ export async function GET() {
     }
 
     // 1. Get User Count
-    let userCount = 0;
-    try {
-      const userResult = await db.select({ count: count() }).from(users);
-      userCount = userResult[0]?.count || 0;
-    } catch (dbErr) {
-      console.warn("DB unavailable for stats, checking users.json...");
-      try {
-        const usersFile = path.join(process.cwd(), 'data', 'users.json');
-        const fileContent = await require('fs').promises.readFile(usersFile, 'utf8');
-        userCount = JSON.parse(fileContent).length;
-      } catch (fErr) {
-        userCount = 0;
-      }
-    }
+    const [{ count: userCount }] = await db.select({ count: count() }).from(users);
 
-    // 2. Get Site Content Counts
+    // 2. Get Traffic Stats
+    const [{ totalVisits }] = await db.select({ totalVisits: sql<number>`SUM(total_visits)` }).from(analytics);
+
+    // 3. Get Site Content Counts
     const content = await getGlobalContent();
     
     const toolsCount = content?.tools?.length || 0;
     const blogCount = content?.blog?.length || 0;
     const assetsCount = content?.assets?.length || 0;
 
-    // 3. Generate some trends (mocked for now, but based on actual counts)
-    const trends = {
-      users: { percentage: '+5%', color: 'text-green-500' },
-      content: { percentage: '+12%', color: 'text-green-500' },
-      engagement: { percentage: '+24%', color: 'text-accent' },
-    };
-
     // 4. Return combined metrics
     return NextResponse.json({
       stats: [
-        { title: 'Total Users', value: userCount.toString(), description: 'Active community members', trend: trends.users },
-        { title: 'Total Tools', value: toolsCount.toString(), description: 'Active and featured tools', trend: trends.content },
-        { title: 'Blog Posts', value: blogCount.toString(), description: 'Published articles', trend: trends.content },
-        { title: 'Assets', value: assetsCount.toString(), description: 'Images and resources', trend: trends.engagement },
+        { title: 'Total Users', value: userCount.toString(), description: 'Active community members', trend: { percentage: '+5%', color: 'text-green-500' } },
+        { title: 'Total Tools', value: toolsCount.toString(), description: 'Active and featured tools', trend: { percentage: '+12%', color: 'text-green-500' } },
+        { title: 'Blog Posts', value: blogCount.toString(), description: 'Published articles', trend: { percentage: '+12%', color: 'text-green-500' } },
+        { title: 'Total Traffic', value: (totalVisits || 0).toString(), description: 'Images and resources', trend: { percentage: '+24%', color: 'text-accent' } },
       ],
       lastUpdated: new Date().toISOString()
     });

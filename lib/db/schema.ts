@@ -6,9 +6,9 @@ export const users = mysqlTable('users', {
   lastName: varchar('last_name', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
   password: text('password').notNull(), // This will store the hashed password
-  role: varchar('role', { length: 50 }).default('user').notNull(),
-  createdAt: timestamp('created_at').defaultNow(),
-  updatedAt: timestamp('updated_at').onUpdateNow(),
+   status: varchar('status', { length: 50 }).default('active').notNull(), // active | suspended | pending
+   createdAt: timestamp('created_at').defaultNow(),
+   updatedAt: timestamp('updated_at').onUpdateNow(),
 }, (table) => {
   return {
     emailIndex: uniqueIndex('email_idx').on(table.email),
@@ -46,4 +46,17 @@ export const apiKeys = mysqlTable('api_keys', {
   allowedOrigin: varchar('allowed_origin', { length: 255 }).notNull(),
   isActive: varchar('is_active', { length: 5 }).default('true'),
   createdAt: timestamp('created_at').defaultNow(),
+});
+
+// Analytics: tracks daily traffic
+export const analytics = mysqlTable('analytics', {
+  id: serial('id').primaryKey(),
+  date: varchar('date', { length: 20 }).notNull(),             // YYYY-MM-DD
+  totalVisits: int('total_visits').default(0),
+  activeUsers: int('active_users').default(0),
+  updatedAt: timestamp('updated_at').defaultNow().onUpdateNow(),
+}, (table) => {
+  return {
+    dateIndex: uniqueIndex('date_idx').on(table.date),
+  }
 });

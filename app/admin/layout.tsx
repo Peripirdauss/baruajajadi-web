@@ -9,6 +9,7 @@ import Link from 'next/link'
 
 const menuItems = [
   { title: 'ringkasan', icon: LayoutDashboard, href: '/admin' },
+  { title: 'manajemen member', icon: Users, href: '/admin/users' },
   { title: 'pengaturan', icon: Settings, href: '/admin/settings' },
   { title: 'halaman utama', icon: LucideImage, href: '/admin/hero' },
   { title: 'tools sakti', icon: Wrench, href: '/admin/tools' },

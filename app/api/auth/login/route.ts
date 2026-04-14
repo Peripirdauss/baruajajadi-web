@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
-import { eq, count } from 'drizzle-orm';
+import { eq, count, sql } from 'drizzle-orm';
 import bcrypt from 'bcryptjs';
 import fs from 'fs/promises';
 import path from 'path';
@@ -13,13 +13,44 @@ export async function POST(request: Request) {
 
     // Admin Bootstrapping from Environment Variables
     try {
+      // 1. Database Schema Sync (Auto-migration)
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS users (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          first_name VARCHAR(255) NOT NULL,
+          last_name VARCHAR(255) NOT NULL,
+          email VARCHAR(255) NOT NULL UNIQUE,
+          password TEXT NOT NULL,
+          role VARCHAR(50) NOT NULL DEFAULT 'user',
+          status VARCHAR(50) NOT NULL DEFAULT 'active',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+      `);
+
+      // Ensure status column exists if table was created earlier
+      try {
+        await db.execute(sql`ALTER TABLE users ADD COLUMN IF NOT EXISTS status VARCHAR(50) NOT NULL DEFAULT 'active' AFTER role`);
+      } catch (e) {
+        // Silently skip if column already exists
+      }
+
+      await db.execute(sql`
+        CREATE TABLE IF NOT EXISTS analytics (
+          id INT AUTO_INCREMENT PRIMARY KEY,
+          date VARCHAR(20) NOT NULL UNIQUE,
+          total_visits INT DEFAULT 0,
+          active_users INT DEFAULT 0,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+        )
+      `);
+
+      // 2. Admin Bootstrapping from Environment Variables
       const adminEmail = process.env.ADMIN_EMAIL;
       const adminPass = process.env.ADMIN_PASSWORD;
 
       if (adminEmail && adminPass) {
-        // Check if THIS specific admin already exists
         const [existingAdmin] = await db.select().from(users).where(eq(users.email, adminEmail)).limit(1);
-        
         if (!existingAdmin) {
           console.log(`Initial boot: Admin ${adminEmail} not found. Creating...`);
           const hashedPassword = await bcrypt.hash(adminPass, 10);
@@ -66,6 +97,14 @@ export async function POST(request: Request) {
 
     if (!user) {
       return NextResponse.json({ error: 'invalid credentials' }, { status: 401 });
+    }
+
+    if (user.status === 'suspended') {
+      return NextResponse.json({ error: 'Your account has been suspended. Please contact support.' }, { status: 403 });
+    }
+
+    if (user.status === 'pending') {
+      return NextResponse.json({ error: 'Your account is awaiting approval from an admin.' }, { status: 403 });
     }
 
     // Compare Password
