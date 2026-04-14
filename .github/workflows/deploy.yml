@@ -49,8 +49,8 @@ jobs:
           # Increase timeout for shared hosting stability
           timeout: 600000
           log-level: verbose
-          # Deployment folder for cPanel Setup Node.js App:
-          server-dir: public_html/baruajajadi.com/perip/
+          # Reverting to ./ because the FTP user is already rooted in the app directory
+          server-dir: ./
           # Exclude files that shouldn't be overridden or aren't needed
           exclude: |
             **/.git*
