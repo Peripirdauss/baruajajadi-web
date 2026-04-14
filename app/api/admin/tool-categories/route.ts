@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getGlobalContent } from '@/lib/content';
 import { db } from '@/lib/db';
-import { site_config } from '@/lib/db/schema';
+import { siteConfig } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 import fs from 'fs/promises';
 import path from 'path';
@@ -24,11 +24,12 @@ export async function POST(request: Request) {
     const updatedData = { ...data, toolCategories: categories };
 
     // 1. Update Database
-    await db.update(site_config)
+    await db.update(siteConfig)
       .set({ 
-        content: JSON.stringify(updatedData),
-        updated_at: new Date()
+        data: JSON.stringify(updatedData),
+        updatedAt: new Date()
       })
+      .where(eq(siteConfig.id, 'global'))
       .execute();
 
     // 2. Fallback: Update JSON file
