@@ -20,12 +20,30 @@ export async function GET() {
     // 2. Get Traffic Stats
     const [{ totalVisits }] = await db.select({ totalVisits: sql<number>`SUM(total_visits)` }).from(analytics);
 
-    // 3. Get Site Content Counts
-    const content = await getGlobalContent();
-    
-    const toolsCount = content?.tools?.length || 0;
-    const blogCount = content?.blog?.length || 0;
-    const assetsCount = content?.assets?.length || 0;
+    // 3. Get Site Content Counts (Using JSON functions for accuracy if possible, otherwise fallback)
+    let toolsCount = 0;
+    let blogCount = 0;
+    let assetsCount = 0;
+
+    try {
+      const counts = await db.select({
+        tools: sql<number>`JSON_LENGTH(JSON_EXTRACT(data, '$.tools'))`,
+        blog: sql<number>`JSON_LENGTH(JSON_EXTRACT(data, '$.blog'))`,
+        assets: sql<number>`JSON_LENGTH(JSON_EXTRACT(data, '$.assets'))`
+      }).from(siteConfig).where(eq(siteConfig.id, 'global'));
+
+      if (counts.length > 0) {
+        toolsCount = counts[0].tools || 0;
+        blogCount = counts[0].blog || 0;
+        assetsCount = counts[0].assets || 0;
+      }
+    } catch (e) {
+      console.warn("SQL JSON count failed, using JS fallback:", e);
+      const content = await getGlobalContent();
+      toolsCount = content?.tools?.length || 0;
+      blogCount = content?.blog?.length || 0;
+      assetsCount = content?.assets?.length || 0;
+    }
 
     // 4. Return combined metrics
     return NextResponse.json({

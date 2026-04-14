@@ -138,10 +138,10 @@ export default function UserDashboard() {
         <header className="mb-12 flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 border-b border-border/40 pb-10">
           <div className="space-y-2" onClick={handleDebugClick}>
             <h1 className="text-6xl font-black tracking-tighter text-foreground leading-none lowercase">
-              halo bestie, <span className="text-accent italic">{user.firstName}</span> !
+              halo bestie, <span className="text-accent italic">{user.firstName}</span> ! {user.role === 'admin' ? '👑' : '✨'}
             </h1>
             <p className="text-lg text-foreground/40 font-medium flex items-center gap-2 mt-4 ml-1">
-              Gimana? Semangat jualan hari ini? Gaskeun!
+              Status kamu: <span className="text-accent font-black uppercase tracking-widest">{user.role === 'admin' ? 'BOSS BESTIE' : 'BESTIE VIP'}</span>
             </p>
           </div>
           <Button size="lg" asChild className="rounded-2xl bg-accent text-accent-foreground hover:bg-accent/90 group px-8 active:scale-95 transition-all shadow-xl shadow-accent/10 h-14 font-black italic uppercase tracking-tight">
@@ -173,6 +173,12 @@ export default function UserDashboard() {
                   <div className="space-y-2 p-5 rounded-[1.5rem] bg-accent/5 border border-accent/10">
                     <span className="text-[10px] text-accent font-black uppercase tracking-[0.3em] block">ID LOGIN</span>
                     <p className="text-sm font-bold text-foreground overflow-hidden text-ellipsis">{user.email}</p>
+                  </div>
+                  <div className="space-y-2 p-5 rounded-[1.5rem] bg-accent/5 border border-accent/10">
+                    <span className="text-[10px] text-accent font-black uppercase tracking-[0.3em] block">LEVEL BESTIE</span>
+                    <p className="text-sm font-bold text-foreground flex items-center gap-2">
+                      <Sparkles className="h-4 w-4" /> {user.role === 'admin' ? 'ADMIN / UNLIMITED' : 'MEMBER / BESTIE VIP'}
+                    </p>
                   </div>
                   <div className="space-y-2 p-5 rounded-[1.5rem] bg-accent/5 border border-accent/10">
                     <span className="text-[10px] text-accent font-black uppercase tracking-[0.3em] block">MEMBER SEJAK</span>

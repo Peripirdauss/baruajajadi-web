@@ -36,6 +36,10 @@ export default function AdminAssetsPage() {
   const [editingAsset, setEditingAsset] = useState<Asset | null>(null);
   const { toast } = useToast();
 
+  const [categories, setCategories] = useState<string[]>([]);
+  const [newCategory, setNewCategory] = useState('');
+  const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+
   const [formData, setFormData] = useState<Asset>({
     slug: '',
     name: '',
@@ -50,10 +54,18 @@ export default function AdminAssetsPage() {
 
   const fetchData = async () => {
     try {
-      const res = await fetch('/api/content');
-      const data = await res.json();
+      const [contentRes, categoriesRes] = await Promise.all([
+        fetch('/api/content'),
+        fetch('/api/admin/categories')
+      ]);
+      
+      const data = await contentRes.json();
+      const categoriesData = await categoriesRes.json();
+      
       setFullData(data);
       setAssets(data.assets || []);
+      setCategories(categoriesData.categories || []);
+      
       if (data.assetsHero) {
         setHeroData(data.assetsHero);
       }
@@ -142,6 +154,35 @@ export default function AdminAssetsPage() {
     }
   };
 
+  const handleSaveCategories = async (newCategories: string[]) => {
+    try {
+      const res = await fetch('/api/admin/categories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ categories: newCategories }),
+      });
+
+      if (res.ok) {
+        setCategories(newCategories);
+        toast({ title: 'Success', description: 'Categories updated' });
+      }
+    } catch (e) {
+      toast({ title: 'Error', description: 'Failed to update categories', variant: 'destructive' });
+    }
+  };
+
+  const addCategory = () => {
+    if (!newCategory || categories.includes(newCategory)) return;
+    const updated = [...categories, newCategory];
+    handleSaveCategories(updated);
+    setNewCategory('');
+  };
+
+  const deleteCategory = (cat: string) => {
+    const updated = categories.filter(c => c !== cat);
+    handleSaveCategories(updated);
+  };
+
   if (loading) return <div className="p-8">Loading...</div>;
 
   return (
@@ -151,70 +192,111 @@ export default function AdminAssetsPage() {
           <h1 className="text-3xl font-bold">Asset Management</h1>
           <p className="text-muted-foreground">Manage your design and development assets.</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => {
-          setIsDialogOpen(open);
-          if (!open) resetForm();
-        }}>
-          <DialogTrigger asChild>
-            <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
-              <Plus className="mr-2 h-4 w-4" /> Add New Asset
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>{editingAsset ? 'Edit Asset' : 'Add New Asset'}</DialogTitle>
-            </DialogHeader>
-            <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
+        <div className="flex gap-2">
+          <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                Manage Categories
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Manage Asset Categories</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="flex gap-2">
                   <Input 
-                    id="name" 
-                    value={formData.name} 
-                    onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                    placeholder="New category name..." 
+                    value={newCategory} 
+                    onChange={(e) => setNewCategory(e.target.value)}
+                  />
+                  <Button onClick={addCategory}>Add</Button>
+                </div>
+                <div className="space-y-2">
+                  {categories.map(cat => (
+                    <div key={cat} className="flex items-center justify-between p-2 border rounded-lg">
+                      <span>{cat}</span>
+                      <Button variant="ghost" size="icon" onClick={() => deleteCategory(cat)}>
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={isDialogOpen} onOpenChange={(open) => {
+            setIsDialogOpen(open);
+            if (!open) resetForm();
+          }}>
+            <DialogTrigger asChild>
+              <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
+                <Plus className="mr-2 h-4 w-4" /> Add New Asset
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>{editingAsset ? 'Edit Asset' : 'Add New Asset'}</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Name</Label>
+                    <Input 
+                      id="name" 
+                      value={formData.name} 
+                      onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="slug">Slug</Label>
+                    <Input 
+                      id="slug" 
+                      value={formData.slug} 
+                      onChange={(e) => setFormData({...formData, slug: e.target.value})} 
+                      disabled={!!editingAsset}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="category">Category</Label>
+                  <select 
+                    id="category"
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    value={formData.category}
+                    onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  >
+                    <option value="">Select a category</option>
+                    {categories.map(cat => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="image">Image URL</Label>
+                  <Input 
+                    id="image" 
+                    value={formData.image} 
+                    onChange={(e) => setFormData({...formData, image: e.target.value})} 
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="slug">Slug</Label>
-                  <Input 
-                    id="slug" 
-                    value={formData.slug} 
-                    onChange={(e) => setFormData({...formData, slug: e.target.value})} 
-                    disabled={!!editingAsset}
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea 
+                    id="description" 
+                    value={formData.description} 
+                    onChange={(e) => setFormData({...formData, description: e.target.value})} 
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="category">Category</Label>
-                <Input 
-                  id="category" 
-                  value={formData.category} 
-                  onChange={(e) => setFormData({...formData, category: e.target.value})} 
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="image">Image URL</Label>
-                <Input 
-                  id="image" 
-                  value={formData.image} 
-                  onChange={(e) => setFormData({...formData, image: e.target.value})} 
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea 
-                  id="description" 
-                  value={formData.description} 
-                  onChange={(e) => setFormData({...formData, description: e.target.value})} 
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleSave} className="bg-accent">Save Asset</Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                <Button onClick={handleSave} className="bg-accent">Save Asset</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
       
       {/* Hero Configuration Section */}
@@ -312,7 +394,11 @@ export default function AdminAssetsPage() {
                     </div>
                   </TableCell>
                   <TableCell className="font-medium">{asset.name}</TableCell>
-                  <TableCell>{asset.category}</TableCell>
+                  <TableCell>
+                    <span className="px-2 py-1 rounded-full text-xs font-semibold bg-accent/20 text-accent-foreground">
+                      {asset.category}
+                    </span>
+                  </TableCell>
                   <TableCell className="text-muted-foreground">{asset.slug}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-2">

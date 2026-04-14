@@ -1,40 +1,57 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+
 interface AssetFiltersProps {
   selectedCategory: string;
   onCategoryChange: (category: string) => void;
 }
 
-const categories = [
-  { id: 'all', label: 'All Assets' },
-  { id: 'ui-kits', label: 'UI Kits' },
-  { id: 'icons', label: 'Icons' },
-  { id: 'fonts', label: 'Fonts' },
-  { id: 'templates', label: 'Templates' },
-  { id: 'illustrations', label: 'Illustrations' },
-  { id: 'photos', label: 'Photos' },
-  { id: 'gradients', label: 'Gradients' },
-  { id: 'components', label: 'Components' },
-];
-
 export default function AssetFilters({
   selectedCategory,
   onCategoryChange,
 }: AssetFiltersProps) {
+  const [categories, setCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    async function fetchCategories() {
+      try {
+        const res = await fetch('/api/admin/categories');
+        const data = await res.json();
+        setCategories(data.categories || []);
+      } catch (e) {
+        console.error("Error fetching categories:", e);
+      }
+    }
+    fetchCategories();
+  }, []);
+
   return (
     <div className="sticky top-20 space-y-6">
       <div>
-        <h3 className="mb-4 text-lg font-semibold text-foreground">Categories</h3>
+        <h3 className="mb-4 text-lg font-semibold text-foreground lowercase">filter kategori</h3>
         <div className="space-y-2">
-          {categories.map((category) => (
+          <button
+            onClick={() => onCategoryChange('all')}
+            className={`block w-full rounded-xl px-4 py-3 text-left text-sm font-bold transition-all lowercase ${
+              selectedCategory === 'all'
+                ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                : 'bg-card text-foreground/50 hover:bg-secondary hover:text-foreground border border-border/50'
+            }`}
+          >
+            semua aset
+          </button>
+          {categories.map((cat) => (
             <button
-              key={category.id}
-              onClick={() => onCategoryChange(category.id)}
-              className={`block w-full rounded-lg px-4 py-2 text-left text-sm font-medium transition-all ${
-                selectedCategory === category.id
-                  ? 'bg-primary text-primary-foreground'
-                  : 'bg-card text-foreground/70 hover:bg-secondary hover:text-foreground'
+              key={cat}
+              onClick={() => onCategoryChange(cat.toLowerCase().replace(/\s+/g, '-'))}
+              className={`block w-full rounded-xl px-4 py-3 text-left text-sm font-bold transition-all lowercase ${
+                selectedCategory === cat.toLowerCase().replace(/\s+/g, '-')
+                  ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/20'
+                  : 'bg-card text-foreground/50 hover:bg-secondary hover:text-foreground border border-border/50'
               }`}
             >
-              {category.label}
+              {cat}
             </button>
           ))}
         </div>
