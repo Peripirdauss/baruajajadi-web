@@ -47,7 +47,6 @@ jobs:
           cp -r .next/static/. deploy_dist/.next/static/
           
           # 3. Copy custom configurations
-          cp server.js deploy_dist/
           cp .htaccess deploy_dist/
           
           # 4. Create restart token
