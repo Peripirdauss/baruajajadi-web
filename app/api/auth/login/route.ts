@@ -11,24 +11,48 @@ export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
 
-    // Sync users from JSON to Database only if empty (Initial seed)
+    // Sync users from JSON or Env to Database only if empty (Initial seed)
     try {
       const [{ value: userCount }] = await db.select({ value: count() }).from(users);
       if (userCount === 0) {
-        console.log('Database empty, seeding default users from data/users.json...');
-        const usersFile = path.join(process.cwd(), 'data', 'users.json');
-        const fileData = await fs.readFile(usersFile, 'utf8');
-        const defaultUsers = JSON.parse(fileData);
+        console.log('Database empty, attempting to seed admin user...');
+        
+        // 1. Try Environment Variables (Most Secure)
+        const adminEmail = process.env.ADMIN_EMAIL;
+        const adminPass = process.env.ADMIN_PASSWORD;
 
-        for (const u of defaultUsers) {
-          const hashedPassword = await bcrypt.hash(u.password, 10);
+        if (adminEmail && adminPass) {
+          console.log(`Seeding admin from environment variables: ${adminEmail}`);
+          const hashedPassword = await bcrypt.hash(adminPass, 10);
           await db.insert(users).values({
-            firstName: u.firstName,
-            lastName: u.lastName,
-            email: u.email,
+            firstName: 'Admin',
+            lastName: 'User',
+            email: adminEmail,
             password: hashedPassword,
-            role: u.role,
+            role: 'admin',
           });
+        } 
+        // 2. Fallback to users.json (Local dev)
+        else {
+          try {
+            const usersFile = path.join(process.cwd(), 'data', 'users.json');
+            const fileData = await fs.readFile(usersFile, 'utf8');
+            const defaultUsers = JSON.parse(fileData);
+
+            for (const u of defaultUsers) {
+              const hashedPassword = await bcrypt.hash(u.password, 10);
+              await db.insert(users).values({
+                firstName: u.firstName,
+                lastName: u.lastName,
+                email: u.email,
+                password: hashedPassword,
+                role: u.role,
+              });
+            }
+            console.log('Seeded users from data/users.json');
+          } catch (fileErr) {
+            console.warn('Neither env vars nor users.json found for seeding.');
+          }
         }
       }
     } catch (dbErr: any) {
