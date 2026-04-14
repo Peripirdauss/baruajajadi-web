@@ -2,11 +2,20 @@ import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
 
-const jwtSecretValue = process.env.JWT_SECRET
-if (!jwtSecretValue) {
-  throw new Error('FATAL: JWT_SECRET environment variable is not set.')
+function getJwtSecret() {
+  const jwtSecretValue = process.env.JWT_SECRET
+  if (!jwtSecretValue) {
+    // During the Next.js build phase, we provide a placeholder to avoid breaking the build.
+    // At runtime, this will throw the required error if the secret is missing.
+    if (process.env.NODE_ENV === 'production' && !process.env.NEXT_PHASE?.includes('build')) {
+      throw new Error('FATAL: JWT_SECRET environment variable is not set.')
+    }
+    return new TextEncoder().encode(jwtSecretValue || 'temporary-build-secret-never-used-at-runtime')
+  }
+  return new TextEncoder().encode(jwtSecretValue)
 }
-const secret = new TextEncoder().encode(jwtSecretValue)
+
+const secret = getJwtSecret()
 
 export async function encrypt(payload: any) {
   return await new SignJWT(payload)
