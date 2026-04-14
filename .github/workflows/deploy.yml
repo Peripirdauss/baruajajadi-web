@@ -46,6 +46,9 @@ jobs:
           port: 21
           local-dir: ./
           state-name: .ftp-deploy-sync-state-v2.json
+          # Increase timeout for shared hosting stability
+          timeout: 600000
+          log-level: verbose
           # Deployment folder for cPanel Setup Node.js App:
           server-dir: public_html/baruajajadi.com/perip/
           # Exclude files that shouldn't be overridden or aren't needed
