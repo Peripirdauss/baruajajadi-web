@@ -8,8 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
-import { Plus, Pencil, Trash2, Save, X } from 'lucide-react';
+import { Plus, Pencil, Trash2, Save, X, ImageIcon, Search, Settings } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { generateSlug } from '@/lib/utils/slug';
 
 interface Asset {
   slug: string;
@@ -39,6 +40,7 @@ export default function AdminAssetsPage() {
   const [categories, setCategories] = useState<string[]>([]);
   const [newCategory, setNewCategory] = useState('');
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
+  const [autoSlug, setAutoSlug] = useState(true);
 
   const [formData, setFormData] = useState<Asset>({
     slug: '',
@@ -51,6 +53,12 @@ export default function AdminAssetsPage() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (autoSlug && !editingAsset && formData.name) {
+      setFormData(prev => ({ ...prev, slug: generateSlug(formData.name) }));
+    }
+  }, [formData.name, autoSlug, editingAsset]);
 
   const fetchData = async () => {
     try {
@@ -77,6 +85,11 @@ export default function AdminAssetsPage() {
   };
 
   const handleSave = async () => {
+    if (!formData.name || !formData.slug || !formData.category) {
+      toast({ title: 'Validation Error', description: 'Please fill name, slug, and category.', variant: 'destructive' });
+      return;
+    }
+
     const newAssets = editingAsset
       ? assets.map((a) => (a.slug === editingAsset.slug ? formData : a))
       : [...assets, formData];
@@ -133,6 +146,7 @@ export default function AdminAssetsPage() {
       category: '',
       image: ''
     });
+    setAutoSlug(true);
   };
 
   const handleSaveHero = async () => {
@@ -183,44 +197,55 @@ export default function AdminAssetsPage() {
     handleSaveCategories(updated);
   };
 
-  if (loading) return <div className="p-8">Loading...</div>;
+  if (loading) return (
+    <div className="min-h-[400px] flex flex-col items-center justify-center gap-4">
+      <div className="h-10 w-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+      <p className="text-xs font-black text-primary/40 uppercase tracking-widest">Memuat Aset...</p>
+    </div>
+  );
 
   return (
-    <div className="p-8 space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold">Asset Management</h1>
-          <p className="text-muted-foreground">Manage your design and development assets.</p>
+    <div className="space-y-12">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-4xl font-black tracking-tighter lowercase italic">pilihan aset 🎨</h1>
+          <p className="text-muted-foreground font-medium lowercase">kelola koleksi template & desain sakti kita.</p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline">
-                Manage Categories
+              <Button variant="outline" className="rounded-2xl border-border/40 font-bold lowercase hover:bg-slate-50 shadow-sm transition-all active:scale-95">
+                manage kategori
               </Button>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Manage Asset Categories</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
+            <DialogContent className="sm:max-w-[400px] rounded-[2.5rem] border-none shadow-2xl overflow-hidden">
+              <div className="p-8 pb-0">
+                <DialogHeader>
+                  <DialogTitle className="lowercase font-black text-2xl tracking-tighter italic">kategori aset 📦</DialogTitle>
+                </DialogHeader>
+              </div>
+              <div className="p-8 space-y-6">
                 <div className="flex gap-2">
                   <Input 
-                    placeholder="New category name..." 
+                    placeholder="nama kategori baru..." 
                     value={newCategory} 
                     onChange={(e) => setNewCategory(e.target.value)}
+                    className="rounded-xl lowercase font-bold bg-slate-50 border-none h-12"
                   />
-                  <Button onClick={addCategory}>Add</Button>
+                  <Button onClick={addCategory} className="rounded-xl bg-primary h-12 px-6 font-black">tambah</Button>
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 max-h-[300px] overflow-auto pr-2 custom-scrollbar">
                   {categories.map(cat => (
-                    <div key={cat} className="flex items-center justify-between p-2 border rounded-lg">
-                      <span>{cat}</span>
-                      <Button variant="ghost" size="icon" onClick={() => deleteCategory(cat)}>
+                    <div key={cat} className="flex items-center justify-between p-4 border border-slate-100 rounded-xl bg-white group hover:border-primary/30 transition-all">
+                      <span className="font-bold text-sm lowercase tracking-tight">{cat}</span>
+                      <Button variant="ghost" size="icon" onClick={() => deleteCategory(cat)} className="h-8 w-8 text-destructive group-hover:scale-110 transition-transform">
                         <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
+                  {categories.length === 0 && (
+                    <div className="text-center py-10 opacity-20 italic text-sm font-bold lowercase">belum ada kategori.</div>
+                  )}
                 </div>
               </div>
             </DialogContent>
@@ -231,68 +256,91 @@ export default function AdminAssetsPage() {
             if (!open) resetForm();
           }}>
             <DialogTrigger asChild>
-              <Button className="bg-accent text-accent-foreground hover:bg-accent/90">
-                <Plus className="mr-2 h-4 w-4" /> Add New Asset
+              <Button className="bg-accent text-accent-foreground hover:bg-accent/90 px-8 rounded-2xl font-black shadow-xl shadow-accent/20 lowercase h-12 transition-all active:scale-95">
+                <Plus className="mr-2 h-5 w-5" /> tambah aset baru
               </Button>
             </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>{editingAsset ? 'Edit Asset' : 'Add New Asset'}</DialogTitle>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+            <DialogContent className="sm:max-w-[650px] rounded-[3.5rem] border-none shadow-2xl overflow-hidden p-0">
+              <div className="absolute top-0 right-0 p-12 text-accent/5 pointer-events-none">
+                <ImageIcon className="h-64 w-64 rotate-12" />
+              </div>
+              <div className="p-10 space-y-8">
+                <DialogHeader>
+                  <DialogTitle className="text-3xl font-black lowercase italic tracking-tighter">
+                    {editingAsset ? 'edit aset pilihan 🎨' : 'tambah aset baru 🎨'}
+                  </DialogTitle>
+                  <p className="text-xs text-muted-foreground lowercase font-bold tracking-widest leading-relaxed opacity-60">pastikan semua detail aset sudah benar biar bestie gak bingung.</p>
+                </DialogHeader>
+                <div className="grid gap-8 relative z-10">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40 pl-2">nama aset</Label>
+                      <Input 
+                        value={formData.name} 
+                        onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                        placeholder="e.g. Kit Branding UMKM"
+                        className="rounded-2xl h-14 bg-slate-50 border-none font-black placeholder:font-medium placeholder:text-muted-foreground/20 px-6 text-base"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40 pl-2 flex justify-between items-center">
+                        slug URL
+                        <button type="button" onClick={() => setAutoSlug(!autoSlug)} className={`text-[9px] px-2 py-0.5 rounded-full border ${autoSlug ? 'bg-primary/10 border-primary/20 text-primary' : 'bg-slate-100 border-slate-200 text-slate-400'}`}>
+                          {autoSlug ? 'auto ✨' : 'manual ✍️'}
+                        </button>
+                      </Label>
+                      <Input 
+                        value={formData.slug} 
+                        onChange={(e) => setFormData({...formData, slug: e.target.value})} 
+                        placeholder="e.g. kit-branding-umkm"
+                        className="rounded-2xl h-14 bg-slate-50 border-none font-mono text-sm px-6 opacity-70"
+                        disabled={!!editingAsset}
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40 pl-2">kategori</Label>
+                      <select 
+                        className="flex h-14 w-full rounded-2xl border-none bg-slate-50 px-6 py-2 text-sm font-black lowercase focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/20 transition-all"
+                        value={formData.category}
+                        onChange={(e) => setFormData({...formData, category: e.target.value})}
+                      >
+                        <option value="">pilih kategori</option>
+                        {categories.map(cat => (
+                          <option key={cat} value={cat}>{cat}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40 pl-2">preview image URL</Label>
+                      <Input 
+                        value={formData.image} 
+                        onChange={(e) => setFormData({...formData, image: e.target.value})} 
+                        placeholder="https://images.unsplash.com/..."
+                        className="rounded-2xl h-14 bg-slate-50 border-none font-bold px-6 text-sm"
+                      />
+                    </div>
+                  </div>
+
                   <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input 
-                      id="name" 
-                      value={formData.name} 
-                      onChange={(e) => setFormData({...formData, name: e.target.value})} 
+                    <Label className="text-[10px] font-black uppercase tracking-widest text-primary/40 pl-2">deskripsi aset</Label>
+                    <Textarea 
+                      value={formData.description} 
+                      onChange={(e) => setFormData({...formData, description: e.target.value})} 
+                      rows={4}
+                      placeholder="jelaskan kegunaan aset ini buat tim bestie..."
+                      className="rounded-[2.5rem] bg-slate-50 border-none font-bold resize-none p-8 text-sm leading-relaxed"
                     />
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="slug">Slug</Label>
-                    <Input 
-                      id="slug" 
-                      value={formData.slug} 
-                      onChange={(e) => setFormData({...formData, slug: e.target.value})} 
-                      disabled={!!editingAsset}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="category">Category</Label>
-                  <select 
-                    id="category"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    value={formData.category}
-                    onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map(cat => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="image">Image URL</Label>
-                  <Input 
-                    id="image" 
-                    value={formData.image} 
-                    onChange={(e) => setFormData({...formData, image: e.target.value})} 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea 
-                    id="description" 
-                    value={formData.description} 
-                    onChange={(e) => setFormData({...formData, description: e.target.value})} 
-                  />
                 </div>
               </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                <Button onClick={handleSave} className="bg-accent">Save Asset</Button>
+              <DialogFooter className="bg-slate-50/50 p-10 mt-0">
+                <div className="flex flex-col sm:flex-row gap-4 w-full">
+                  <Button variant="ghost" onClick={() => setIsDialogOpen(false)} className="flex-1 rounded-2xl font-bold h-14 lowercase">batal</Button>
+                  <Button onClick={handleSave} className="flex-1 bg-primary text-white rounded-2xl font-black h-14 shadow-xl shadow-primary/20 lowercase italic text-base">simpan aset sakti ✨</Button>
+                </div>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -300,41 +348,43 @@ export default function AdminAssetsPage() {
       </div>
       
       {/* Hero Configuration Section */}
-      <Card className="border-primary/20 bg-primary/[0.02]">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold lowercase">konfigurasi header halaman 🎨</CardTitle>
-          <CardDescription className="lowercase">atur judul, subtitle, dan statistik di halaman pilihan aset sakti.</CardDescription>
+      <Card className="rounded-[4rem] border-none shadow-2xl shadow-primary/10 bg-primary/[0.03] overflow-hidden relative group">
+        <div className="absolute top-0 right-0 p-24 text-primary/5 pointer-events-none transition-transform group-hover:scale-110 duration-1000">
+          <Settings className="h-80 w-80 -rotate-12" />
+        </div>
+        <CardHeader className="p-12 pb-0 relative z-10">
+          <CardTitle className="text-3xl font-black lowercase italic tracking-tighter">konfigurasi header halaman 🎨</CardTitle>
+          <CardDescription className="lowercase font-bold text-muted-foreground/40 tracking-[0.2em] text-[10px]">atur judul, subtitle, dan statistik di halaman pilihan aset sakti.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid gap-6 md:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="hero-title" className="lowercase">judul utama</Label>
+        <CardContent className="p-12 space-y-12 relative z-10">
+          <div className="grid gap-10 md:grid-cols-2">
+            <div className="space-y-4">
+              <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/30 pl-4">judul utama</Label>
               <Input 
-                id="hero-title" 
                 value={heroData.title} 
                 onChange={(e) => setHeroData({...heroData, title: e.target.value})}
                 placeholder="pilihan aset sakti ✨"
+                className="h-16 rounded-[2rem] bg-white border-none shadow-xl shadow-primary/5 font-black lowercase text-xl px-8"
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="hero-subtitle" className="lowercase">subtitle</Label>
+            <div className="space-y-4">
+              <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/30 pl-4">subtitle</Label>
               <Textarea 
-                id="hero-subtitle" 
                 value={heroData.subtitle} 
                 onChange={(e) => setHeroData({...heroData, subtitle: e.target.value})}
                 placeholder="koleksi template & desain..."
-                className="h-20"
+                className="h-16 rounded-[2rem] bg-white border-none shadow-xl shadow-primary/5 font-bold lowercase px-8 py-5 resize-none"
               />
             </div>
           </div>
           
-          <div className="pt-4 border-t border-primary/10">
-            <Label className="lowercase block mb-4 font-bold text-primary/60">statistik (opsional)</Label>
-            <div className="grid gap-4 md:grid-cols-3">
+          <div className="space-y-8">
+            <Label className="text-[11px] font-black uppercase tracking-[0.3em] text-primary/30 pl-4">statistik performa</Label>
+            <div className="grid gap-8 md:grid-cols-3">
               {heroData.stats.map((stat: any, i: number) => (
-                <div key={i} className="space-y-3 p-4 rounded-2xl bg-white border border-border shadow-sm">
-                  <div className="space-y-1">
-                    <Label className="text-[10px] lowercase text-muted-foreground">nilai (e.g. 500+)</Label>
+                <div key={i} className="space-y-6 p-8 rounded-[3.5rem] bg-white border-none shadow-xl shadow-primary/5 group/stat hover:scale-105 transition-all duration-700">
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/20">nilai (misal: 500+)</Label>
                     <Input 
                       value={stat.value} 
                       onChange={(e) => {
@@ -342,11 +392,11 @@ export default function AdminAssetsPage() {
                         newStats[i].value = e.target.value;
                         setHeroData({...heroData, stats: newStats});
                       }}
-                      className="font-bold text-primary"
+                      className="font-black text-4xl text-primary border-none p-0 h-auto bg-transparent focus-visible:ring-0 tracking-tighter"
                     />
                   </div>
-                  <div className="space-y-1">
-                    <Label className="text-[10px] lowercase text-muted-foreground">label (e.g. aset ready)</Label>
+                  <div className="space-y-2">
+                    <Label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/20">label (misal: aset ready)</Label>
                     <Input 
                       value={stat.label} 
                       onChange={(e) => {
@@ -354,6 +404,7 @@ export default function AdminAssetsPage() {
                         newStats[i].label = e.target.value;
                         setHeroData({...heroData, stats: newStats});
                       }}
+                      className="font-black text-[10px] border-none p-0 h-auto bg-transparent focus-visible:ring-0 lowercase tracking-widest opacity-60"
                     />
                   </div>
                 </div>
@@ -361,70 +412,81 @@ export default function AdminAssetsPage() {
             </div>
           </div>
           
-          <div className="flex justify-end pt-4">
-            <Button onClick={handleSaveHero} className="bg-primary text-white hover:bg-primary/90 px-8 rounded-xl font-bold lowercase">
-              <Save className="mr-2 h-4 w-4" /> simpan perubahan header
+          <div className="flex justify-end pt-6">
+            <Button onClick={handleSaveHero} className="bg-primary text-white hover:bg-primary/90 px-12 h-16 rounded-[2.5rem] font-black lowercase shadow-2xl shadow-primary/30 italic text-base transition-all active:scale-95">
+              <Save className="mr-3 h-6 w-6" /> simpan perubahan header sakti
             </Button>
           </div>
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Existing Assets</CardTitle>
-          <CardDescription>A list of all curated assets available for download.</CardDescription>
+      <Card className="rounded-[4rem] border-none shadow-2xl bg-white overflow-hidden relative group/list">
+        <CardHeader className="px-14 py-12">
+          <CardTitle className="text-3xl font-black lowercase tracking-tighter italic">daftar aset sakti 📦</CardTitle>
+          <CardDescription className="font-bold lowercase text-muted-foreground/30 tracking-[0.3em] text-[10px]">semua koleksi aset pilihan yang bisa diakses user.</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Image</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Slug</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {assets.map((asset) => (
-                <TableRow key={asset.slug}>
-                  <TableCell>
-                    <div className="w-10 h-10 rounded overflow-hidden bg-muted">
-                      <img src={asset.image} alt={asset.name} className="w-full h-full object-cover" />
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-medium">{asset.name}</TableCell>
-                  <TableCell>
-                    <span className="px-2 py-1 rounded-full text-xs font-semibold bg-accent/20 text-accent-foreground">
-                      {asset.category}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-muted-foreground">{asset.slug}</TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon" onClick={() => {
-                        setEditingAsset(asset);
-                        setFormData(asset);
-                        setIsDialogOpen(true);
-                      }}>
-                        <Pencil className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="text-destructive" onClick={() => handleDelete(asset.slug)}>
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+        <CardContent className="px-0">
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent bg-slate-50/50 border-b border-border/10">
+                  <TableHead className="pl-14 py-8 font-black text-[11px] uppercase tracking-[0.3em] text-primary/20">preview & info</TableHead>
+                  <TableHead className="font-black text-[11px] uppercase tracking-[0.3em] text-primary/20">slug & kategori</TableHead>
+                  <TableHead className="hidden lg:table-cell font-black text-[11px] uppercase tracking-[0.3em] text-primary/20">deskripsi</TableHead>
+                  <TableHead className="text-right pr-14 font-black text-[11px] uppercase tracking-[0.3em] text-primary/20">aksi</TableHead>
                 </TableRow>
-              ))}
-              {assets.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
-                    No assets found. Add your first resource!
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {assets.map((asset) => (
+                  <TableRow key={asset.slug} className="group transition-all hover:bg-slate-50/80">
+                    <TableCell className="pl-14 py-10">
+                      <div className="flex items-center gap-8">
+                        <div className="w-20 h-20 rounded-[2.5rem] overflow-hidden bg-white shadow-2xl border-4 border-white transition-transform group-hover:scale-110 duration-700">
+                          <img src={asset.image} alt={asset.name} className="w-full h-full object-cover" />
+                        </div>
+                        <span className="font-black text-2xl tracking-tighter lowercase italic group-hover:text-primary transition-colors">{asset.name}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col gap-2">
+                        <span className="px-4 py-2 rounded-full text-[10px] font-black bg-primary/5 text-primary w-fit lowercase tracking-widest">{asset.category}</span>
+                        <span className="font-mono text-[10px] text-muted-foreground/30 pl-2">{asset.slug}</span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden lg:table-cell">
+                      <p className="text-sm text-muted-foreground/50 font-black line-clamp-2 max-w-[350px] leading-relaxed lowercase italic">
+                        {asset.description}
+                      </p>
+                    </TableCell>
+                    <TableCell className="text-right pr-14">
+                      <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all transform translate-x-4 group-hover:translate-x-0">
+                        <Button variant="ghost" size="icon" onClick={() => {
+                          setEditingAsset(asset);
+                          setFormData(asset);
+                          setIsDialogOpen(true);
+                        }} className="h-12 w-12 rounded-2xl hover:bg-primary/10 hover:text-primary transition-all">
+                          <Pencil className="h-5 w-5" />
+                        </Button>
+                        <Button variant="ghost" size="icon" className="h-12 w-12 rounded-2xl hover:bg-destructive/10 hover:text-destructive transition-all" onClick={() => handleDelete(asset.slug)}>
+                          <Trash2 className="h-5 w-5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {assets.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-80 text-center bg-slate-50/10">
+                      <div className="flex flex-col items-center gap-4 opacity-5">
+                        <Search className="h-24 w-24" />
+                        <p className="font-black text-2xl lowercase tracking-widest italic">Aset Masih Kosong...</p>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>
