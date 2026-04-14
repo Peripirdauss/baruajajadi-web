@@ -31,10 +31,28 @@ jobs:
           DB_NAME: ${{secrets.DB_NAME}}
           JWT_SECRET: ${{secrets.JWT_SECRET}}
 
-      - name: Prepare Restart Token
+      - name: Prepare Deployment Artifacts
         run: |
-          mkdir -p tmp
-          date > tmp/restart.txt
+          # Create a clean deployment directory
+          mkdir -p deploy_dist
+          
+          # 1. Copy standalone server and minimal node_modules
+          cp -r .next/standalone/. deploy_dist/
+          
+          # 2. Copy static assets (required by standalone mode)
+          mkdir -p deploy_dist/public
+          cp -r public/. deploy_dist/public/
+          
+          mkdir -p deploy_dist/.next/static
+          cp -r .next/static/. deploy_dist/.next/static/
+          
+          # 3. Copy custom configurations
+          cp server.js deploy_dist/
+          cp .htaccess deploy_dist/
+          
+          # 4. Create restart token
+          mkdir -p deploy_dist/tmp
+          date > deploy_dist/tmp/restart.txt
 
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -44,20 +62,14 @@ jobs:
           password: ${{secrets.FTP_PASSWORD}}
           protocol: ftp
           port: 21
-          local-dir: ./
+          # Target only the optimized artifacts folder
+          local-dir: ./deploy_dist/
+          server-dir: ./
           state-name: .ftp-deploy-sync-state-v2.json
-          # Increase timeout for shared hosting stability
           timeout: 600000
           log-level: verbose
-          # Reverting to ./ because the FTP user is already rooted in the app directory
-          server-dir: ./
-          # Exclude files that shouldn't be overridden or aren't needed
+          # Exclude files that aren't needed even in dist
           exclude: |
             **/.git*
             **/.git*/**
-            **/node_modules/**
-            **/.next/cache/**
             .env*
-            *.db
-            *.sqlite
-            # Keep .htaccess if you want to use the one we just created
