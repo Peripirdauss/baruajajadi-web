@@ -46,8 +46,8 @@ jobs:
           port: 21
           local-dir: ./
           state-name: .ftp-deploy-sync-state-v2.json
-          # Simplified deployment folder for cPanel:
-          server-dir: ./
+          # Deployment folder for cPanel Setup Node.js App:
+          server-dir: public_html/baruajajadi.com/perip/
           # Exclude files that shouldn't be overridden or aren't needed
           exclude: |
             **/.git*
