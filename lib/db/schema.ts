@@ -6,9 +6,10 @@ export const users = mysqlTable('users', {
   lastName: varchar('last_name', { length: 255 }).notNull(),
   email: varchar('email', { length: 255 }).notNull(),
   password: text('password').notNull(), // This will store the hashed password
-   status: varchar('status', { length: 50 }).default('active').notNull(), // active | suspended | pending
-   createdAt: timestamp('created_at').defaultNow(),
-   updatedAt: timestamp('updated_at').onUpdateNow(),
+  role: varchar('role', { length: 50 }).default('user').notNull(),
+  status: varchar('status', { length: 50 }).default('active').notNull(), // active | suspended | pending
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').onUpdateNow(),
 }, (table) => {
   return {
     emailIndex: uniqueIndex('email_idx').on(table.email),

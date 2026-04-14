@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/lib/db';
-import { users, siteConfig } from '@/lib/db/schema';
+import { users, siteConfig, analytics } from '@/lib/db/schema';
 import { sql, count, eq } from 'drizzle-orm';
 import { getGlobalContent } from '@/lib/content';
 import { getSession } from '@/lib/auth';

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'
 import { SidebarProvider, Sidebar, SidebarContent, SidebarHeader, SidebarMenu, SidebarMenuItem, SidebarMenuButton, SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarTrigger } from '@/components/ui/sidebar'
-import { LayoutDashboard, Image as LucideImage, Wrench, FileText, Home, Settings, Loader2 } from 'lucide-react'
+import { LayoutDashboard, Image as LucideImage, Wrench, FileText, Home, Settings, Loader2, Users } from 'lucide-react'
 import Link from 'next/link'
 
 const menuItems = [
